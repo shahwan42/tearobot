@@ -19,7 +19,7 @@
 - [ ] CryptoCurrency Stock Market
 - [ ] financial tracking
 - [ ] ToDo list manager
-- [ ] 
+- [ ] and others
 
 ## To Contribute:
 * make sure you have `git`, `python(v3.6+)` and `pipenv` installed on your system
@@ -29,10 +29,12 @@
 * `$pipenv install` install dependencies and create a virtualenv
 * `$pipenv shell` launch the a virtualenv
 * `$export TOKEN=<your-bot-token>`
+* `$export YANDEX=<yandex-translate-token>`
+* OR rename [config-sample.py](./config-sample.py) to config.py add your Variables
 * `$python tea.py`
 * see how it works
 * open an issue with the feature you want to add
 * open the project folder in your code editor (e.g VS Code)
-* Develop a new feature/fixbug
-* test if it's working on your test put
+* develop a new feature/fixbug
+* test if it's working on your test bot
 * make a pull request
