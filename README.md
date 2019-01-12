@@ -3,23 +3,23 @@
 
 ## Services:
 - [x] En-Ar word Translator
-- [] Conversational Bot
-- [] Recognise and Translate (translate from image)
-- [] Extract Text from Image (OCR)
-- [] Text-to-Speech
-- [] speech-to-Text
-- [] google search
-- [] latest news
-- [] weatherToday
-- [] pastebin this code
-- [] publicly-upload photo
-- [] publicly-upload video
-- [] publicly-upload file
-- [] calculator
-- [] CryptoCurrency Stock Market
-- [] financial tracking
-- [] ToDo list manager
-- [] 
+- [ ] Conversational Bot
+- [ ] Recognise and Translate (translate from image)
+- [ ] Extract Text from Image (OCR)
+- [ ] Text-to-Speech
+- [ ] speech-to-Text
+- [ ] google search
+- [ ] latest news
+- [ ] weatherToday
+- [ ] pastebin this code
+- [ ] publicly-upload photo
+- [ ] publicly-upload video
+- [ ] publicly-upload file
+- [ ] calculator
+- [ ] CryptoCurrency Stock Market
+- [ ] financial tracking
+- [ ] ToDo list manager
+- [ ] 
 
 ## To Contribute:
 * make sure you have `git`, `python(v3.6+)` and `pipenv` installed on your system
