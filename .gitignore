@@ -116,3 +116,6 @@ dmypy.json
 
 # vscode workspace config
 .vscode/
+
+# not to mistakenly add it in a commit
+config.py

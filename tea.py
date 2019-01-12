@@ -4,11 +4,11 @@ import time
 import sys
 import os
 import urllib
-import config
+# import config  # uncomment for dev
 from services.translate import translate
 
-# provide bot token from config file or TOKEN envVar
-TOKEN = config.TOKEN or os.environ.get('TOKEN')
+# provide bot token from TOKEN envVar or config file
+TOKEN = os.environ.get('TOKEN')  # or config.TOKEN
 if not TOKEN:
     print('Please provied a token for the bot to run')
     sys.exit(0)
@@ -16,7 +16,7 @@ if not TOKEN:
 URL = f'https://api.telegram.org/bot{TOKEN}/'
 
 # other services tokens
-YANDEX = config.YANDEX or os.environ.get('YANDEX')
+YANDEX = os.environ.get('YANDEX')  # or config.YANDEX
 
 
 def get_url(url):
@@ -97,7 +97,6 @@ def handle_updates(updates):
         elif text.startswith('/translate '):  # /translate command
             word = text.split(' ')[1]  #
             result = translate(YANDEX, word)
-            print(result)
             send_message(chat, result)
         # Add your Commands Below in the following form
         # elif text.startswith('yourCommand '):
