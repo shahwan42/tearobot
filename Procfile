@@ -1,1 +1,1 @@
-web: python tea.py
+worker: python tea.py
