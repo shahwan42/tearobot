@@ -81,9 +81,7 @@ def handle_updates(updates):
         text = update['message']['text']  # extract msg text
         chat = update['message']['chat']['id']  # extract chat_id
         if not text.startswith('/'):  # if no command provided
-            print('first if')
             send_message(chat, 'Please use one of the defined commands')
-            print('first if END')
         elif text == '/start':  # handle /start command
             send_message(chat, 'Welcome to TBot.\nusage:\n'
                          '/translate [word] - to translate word '
