@@ -4,11 +4,11 @@ import time
 import sys
 import os
 import urllib
-# import config  # uncomment for dev
+import config  # uncomment for dev
 from services.translate import translate
 
 # provide bot token from TOKEN envVar or config file
-TOKEN = os.environ.get('TOKEN')  # or config.TOKEN
+TOKEN = os.environ.get('TOKEN') or config.TOKEN
 if not TOKEN:
     print('Please provied a token for the bot to run')
     sys.exit(0)
@@ -16,7 +16,7 @@ if not TOKEN:
 URL = f'https://api.telegram.org/bot{TOKEN}/'
 
 # other services tokens
-YANDEX = os.environ.get('YANDEX')  # or config.YANDEX
+YANDEX = os.environ.get('YANDEX') or config.YANDEX
 
 
 def get_url(url):
@@ -84,17 +84,17 @@ def handle_updates(updates):
             send_message(chat, 'Please use one of the defined commands')
         elif text == '/start':  # handle /start command
             send_message(chat, 'Welcome to TBot.\nusage:\n'
-                         '/translate [word] - to translate word '
-                         'from english to arabic')
+                         '/translate [message] - to translate '
+                         'a message from english to arabic')
         elif text == '/help':  # handle /help command
             send_message(chat,
                          'Available commands:\n'
                          '/help - show this message\n'
-                         '/translate ~word~ - translate a word from english'
-                         'to arabic')
+                         '/translate [message] - translate message '
+                         'from english to arabic')
         elif text.startswith('/translate '):  # /translate command
-            word = text.split(' ')[1]  #
-            result = translate(YANDEX, word)
+            message = ' '.join(text.split(' ')[1:])  # get message to translate
+            result = translate(YANDEX, message)
             send_message(chat, result)
         # Add your Commands Below in the following form
         # elif text.startswith('yourCommand '):
@@ -111,9 +111,10 @@ def main():
         try:
             print('getting updates...')
             updates = get_updates(updates_offset)
-            if len(updates['result']) > 0:
-                updates_offset = last_update_id(updates) + 1
-                handle_updates(updates)
+            if updates['result']:  # to prevent KeyError exception
+                if len(updates['result']) > 0:
+                    updates_offset = last_update_id(updates) + 1
+                    handle_updates(updates)
             time.sleep(0.5)
         except KeyboardInterrupt:
             print('\nquiting...')
