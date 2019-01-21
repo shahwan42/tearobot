@@ -3,6 +3,8 @@
 
 ## Services:
 - [x] En-Ar word Translator
+- [x] En-Ar sentence translation
+- [ ] lang-lang translation
 - [ ] Conversational Bot
 - [ ] Recognise and Translate (translate from image)
 - [ ] Extract Text from Image (OCR)
@@ -10,16 +12,19 @@
 - [ ] speech-to-Text
 - [ ] google search
 - [ ] latest news
-- [ ] weatherToday
+- [ ] Weather Today in Zagazig
 - [ ] pastebin this code
-- [ ] publicly-upload photo
-- [ ] publicly-upload video
-- [ ] publicly-upload file
+- [ ] publicly-upload photo and return its link
+- [ ] publicly-upload video and return its link
+- [ ] publicly-upload file and return its link
 - [ ] calculator
 - [ ] CryptoCurrency Stock Market
 - [ ] financial tracking
 - [ ] ToDo list manager
-- [ ] and others
+- [ ] Tweet for me
+- [ ] Youtube search
+- [ ] NLP-based commands
+- [ ] What else?
 
 ## To Contribute:
 * make sure you have `git`, `python(v3.6+)` and `pipenv` installed on your system
@@ -30,7 +35,7 @@
 * `$pipenv shell` launch the a virtualenv
 * `$export TOKEN=<your-bot-token>`
 * `$export YANDEX=<yandex-translate-token>`
-* OR rename [config-sample.py](./config-sample.py) to config.py add your Variables
+* OR rename [config-sample.py](./config-sample.py) to `config.py` add your Variables
 * `$python tea.py`
 * see how it works
 * open an issue with the feature you want to add
