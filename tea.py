@@ -4,19 +4,18 @@ import time
 import sys
 import os
 import urllib
-import config  # uncomment for dev
+# import config  # uncomment for development
 from services.translate import translate
 
 # provide bot token from TOKEN envVar or config file
-TOKEN = os.environ.get('TOKEN') or config.TOKEN
+TOKEN = os.environ.get('TOKEN')  # or config.TOKEN  # uncomment for dev
+# other services tokens
+YANDEX = os.environ.get('YANDEX')  # or config.YANDEX  # uncomment for dev
 if not TOKEN:
-    print('Please provied a token for the bot to run')
+    print('Please provied your tokens. Refer to the README file')
     sys.exit(0)
 # base url for our request to the telegram APIs
 URL = f'https://api.telegram.org/bot{TOKEN}/'
-
-# other services tokens
-YANDEX = os.environ.get('YANDEX') or config.YANDEX
 
 
 def get_url(url):
