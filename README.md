@@ -11,14 +11,15 @@
 - [ ] Text-to-Speech
 - [ ] speech-to-Text
 - [x] google search
-- [ ] latest news
-- [ ] Weather Today in Zagazig
+- [x] latest news
+- [x] Weather Today in Zagazig
 - [ ] pastebin this code
 - [ ] publicly-upload photo and return its link
 - [ ] publicly-upload video and return its link
 - [ ] publicly-upload file and return its link
 - [ ] calculator
-- [ ] CryptoCurrency Stock Market
+- [x] CryptoCurrency Price
+- [x] CryptoCurrency News
 - [ ] financial tracking
 - [ ] ToDo list manager
 - [ ] Tweet for me
