@@ -89,15 +89,28 @@ def handle_updates(updates):
 
         elif text == '/start':  # handle /start command
             send_message(chat, 'Welcome to TBot.\nusage:\n'
-                         '/translate [message] - to translate '
-                         'a message from english to arabic')
+                         '/help - show help message\n'
+                         '/translate [message] - translate message '
+                         'from english to arabic\n'
+                         '/google message - search google for message\n'
+                         '/crypto_price symbol - get price for a '
+                         'crypto currency using its symbol\n'
+                         '/crypto_news - latest cryptocurrency news\n'
+                         '/news - latest news from BBC\n'
+                         '/weather - Temperature in Zagazig now\n')
 
         elif text == '/help':  # handle /help command
             send_message(chat,
                          'Available commands:\n'
                          '/help - show this message\n'
                          '/translate [message] - translate message '
-                         'from english to arabic')
+                         'from english to arabic\n'
+                         '/google message - search google for message\n'
+                         '/crypto_price symbol - get price for a '
+                         'crypto currency using its symbol\n'
+                         '/crypto_news - latest cryptocurrency news\n'
+                         '/news - latest news from BBC\n'
+                         '/weather - Temperature in Zagazig now\n')
 
         elif text.startswith('/translate '):  # /translate command
             message = ' '.join(text.split(' ')[1:])  # get message to translate
