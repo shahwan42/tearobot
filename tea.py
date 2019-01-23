@@ -81,29 +81,34 @@ def handle_updates(updates):
         chat = update['message']['chat']['id']  # extract chat_id
         if not text.startswith('/'):  # if no command provided
             send_message(chat, 'Please use one of the defined commands')
+
         elif text == '/start':  # handle /start command
             send_message(chat, 'Welcome to TBot.\nusage:\n'
                          '/translate [message] - to translate '
                          'a message from english to arabic')
+
         elif text == '/help':  # handle /help command
             send_message(chat,
                          'Available commands:\n'
                          '/help - show this message\n'
                          '/translate [message] - translate message '
                          'from english to arabic')
+
         elif text.startswith('/translate '):  # /translate command
             message = ' '.join(text.split(' ')[1:])  # get message to translate
             result = translate(YANDEX, message)
             send_message(chat, result)
+
         elif text.startswith('/google '):  # /google command
             result = google_search(text)
             result = '\n'.join(result)
-            send_message(chat,result)
+            send_message(chat, result)
 
         # Add your Commands Below in the following form
         # elif text.startswith('yourCommand '):
         #     statements to do
         #     send_message(chat, result)
+
         else:  # if command wasn't provided correctly
             send_message(chat,
                          'Please use one of the defined commands correctly!')
