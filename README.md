@@ -36,7 +36,7 @@
 * `$pipenv shell` launch the a virtualenv
 * `$export TOKEN=<your-bot-token>`
 * `$export YANDEX=<yandex-translate-token>`
-* OR rename [config-sample.py](./config-sample.py) to `config.py` add your Variables
+* `$export CAP=<crypto-compare-token>`
 * `$python tea.py`
 * see how it works
 * open an issue with the feature you want to add
