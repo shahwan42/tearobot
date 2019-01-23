@@ -6,11 +6,12 @@ import os
 import urllib
 # import config  # uncomment for development
 from services.translate import translate
+from services.weather import weather
 
 # provide bot token from TOKEN envVar or config file
-TOKEN = os.environ.get('TOKEN')  # or config.TOKEN  # uncomment for dev
+TOKEN = os.environ.get('TOKEN') or config.TOKEN  # uncomment for dev
 # other services tokens
-YANDEX = os.environ.get('YANDEX')  # or config.YANDEX  # uncomment for dev
+YANDEX = os.environ.get('YANDEX') or config.YANDEX  # uncomment for dev
 if not TOKEN:
     print('Please provied your tokens. Refer to the README file')
     sys.exit(0)
@@ -95,6 +96,11 @@ def handle_updates(updates):
             message = ' '.join(text.split(' ')[1:])  # get message to translate
             result = translate(YANDEX, message)
             send_message(chat, result)
+
+        elif text.startswith('/weather'):  # weather command
+            result = weather()
+            send_message(chat, "The temperature in Zagazig now is: " + result)
+
         # Add your Commands Below in the following form
         # elif text.startswith('yourCommand '):
         #     statements to do
