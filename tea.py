@@ -109,6 +109,10 @@ def handle_updates(updates):
             result = weather()
             send_message(chat, "The temperature in Zagazig now is: " + result)
 
+        elif text.startswith('/news'):  # news command
+            result = latest_news()
+            send_message(chat, result)
+
         # Add your Commands Below in the following form
         # elif text.startswith('yourCommand '):
         #     statements to do
