@@ -8,11 +8,14 @@ from services.translate import translate
 from services.google import google_search
 from services.weather import weather
 from services.latest_news import latest_news
+from services.crypto_price import crypto_price
+from services.crypto_news import crypto_news
 
 # provide bot token from TOKEN envVar or config file
 TOKEN = os.environ.get('TOKEN')
 # other services tokens
 YANDEX = os.environ.get('YANDEX')
+CAP = os.environ.get('CAP')
 if not TOKEN or not YANDEX:
     print('Please provied your tokens. Refer to the README file')
     sys.exit(0)
@@ -113,6 +116,15 @@ def handle_updates(updates):
         elif text.startswith('/news'):  # news command
             result = latest_news()
             send_message(chat, result)
+
+        elif text.startswith('/crypto_price '):  # /crypto_price command
+            message = text.split(' ')[1]
+            result = crypto_price(CAP, message)
+            send_message(chat, str(result))
+
+        elif text == '/crypto_news':  # crypto_news command
+            result = crypto_news(CAP)
+            send_message(chat, str(result))
 
         # Add your Commands Below in the following form
         # elif text.startswith('yourCommand '):
