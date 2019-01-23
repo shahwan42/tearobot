@@ -7,6 +7,7 @@ import urllib
 from services.translate import translate
 from services.google import google_search
 from services.weather import weather
+from services.latest_news import latest_news
 
 # provide bot token from TOKEN envVar or config file
 TOKEN = os.environ.get('TOKEN')
