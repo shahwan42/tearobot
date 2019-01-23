@@ -10,7 +10,7 @@
 - [ ] Extract Text from Image (OCR)
 - [ ] Text-to-Speech
 - [ ] speech-to-Text
-- [ ] google search
+- [x] google search
 - [ ] latest news
 - [ ] Weather Today in Zagazig
 - [ ] pastebin this code
