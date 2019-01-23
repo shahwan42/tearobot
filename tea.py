@@ -6,7 +6,7 @@ import os
 import urllib
 # import config  # uncomment for dev
 from services.translate import translate
-
+from services.google import google_search
 # provide bot token from TOKEN envVar or config file
 TOKEN = os.environ.get('TOKEN')  # or config.TOKEN
 if not TOKEN:
@@ -98,6 +98,11 @@ def handle_updates(updates):
             word = text.split(' ')[1]  #
             result = translate(YANDEX, word)
             send_message(chat, result)
+        elif text.startswith('/google '):  # /google command
+            result = google_search(text)
+            result = '\n'.join(result)
+            send_message(chat,result)
+
         # Add your Commands Below in the following form
         # elif text.startswith('yourCommand '):
         #     statements to do
