@@ -17,7 +17,7 @@
 - [ ] publicly-upload photo and return its link
 - [ ] publicly-upload video and return its link
 - [ ] publicly-upload file and return its link
-- [ ] calculator
+- [x] calculator
 - [x] CryptoCurrency Price
 - [x] CryptoCurrency News
 - [ ] financial tracking

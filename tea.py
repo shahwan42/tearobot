@@ -13,6 +13,7 @@ from services.latest_news import latest_news
 from services.crypto_price import crypto_price
 from services.crypto_news import crypto_news
 from services.tweet import tweet
+from services.calculator import calc
 
 # provide bot token from TOKEN envVar or config file
 TOKEN = os.environ.get('TOKEN')
@@ -152,6 +153,11 @@ def handle_updates(updates):
             message = ' '.join(text.split(' ')[1:])
             result = tweet(T_API, T_API_SECRET, T_TOKEN, T_TOKEN_SECRET,
                            message)
+            send_message(chat, result)
+
+        elif text.startswith('/calc '):
+            message = ' '.join(text.split(' ')[1:])
+            result = calc(message)
             send_message(chat, result)
 
         # Add your Commands Below in the following form
