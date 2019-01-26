@@ -4,6 +4,8 @@ import time
 import sys
 import os
 import urllib
+
+# --------- services import
 from services.translate import translate
 from services.google import google_search
 from services.weather import weather
@@ -146,7 +148,7 @@ def handle_updates(updates):
             result = crypto_news(CAP)
             send_message(chat, str(result))
 
-        elif text.startswith('/tweet '):
+        elif text.startswith('/tweet '):  # tweet command
             message = ' '.join(text.split(' ')[1:])
             result = tweet(T_API, T_API_SECRET, T_TOKEN, T_TOKEN_SECRET,
                            message)

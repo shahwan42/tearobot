@@ -46,6 +46,12 @@
 * see how it works
 * open an issue with the feature you want to add
 * open the project folder in your code editor (e.g VS Code)
-* develop a new feature/fixbug
-* test if it's working on your test bot
-* make a pull request
+* to develop a new service:
+    - open `services` folder
+    - create new file `your-service-name.py`
+    - add you code
+    - import it in the main `tea.py` file
+    - follow the other services style (you should figure out this part from the code)
+    - test if it's working on your test bot
+    - make a pull request
+
