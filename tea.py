@@ -10,12 +10,19 @@ from services.weather import weather
 from services.latest_news import latest_news
 from services.crypto_price import crypto_price
 from services.crypto_news import crypto_news
+from services.tweet import tweet
 
 # provide bot token from TOKEN envVar or config file
 TOKEN = os.environ.get('TOKEN')
 # other services tokens
 YANDEX = os.environ.get('YANDEX')
 CAP = os.environ.get('CAP')
+# twitter API stuff
+T_API = os.environ.get('T_API')
+T_API_SECRET = os.environ.get('T_API_SECRET')
+T_TOKEN = os.environ.get('T_TOKEN')
+T_TOKEN_SECRET = os.environ.get('T_TOKEN_SECRET')
+
 if not TOKEN or not YANDEX:
     print('Please provied your tokens. Refer to the README file')
     sys.exit(0)
@@ -138,6 +145,12 @@ def handle_updates(updates):
         elif text == '/crypto_news':  # crypto_news command
             result = crypto_news(CAP)
             send_message(chat, str(result))
+
+        elif text.startswith('/tweet '):
+            message = ' '.join(text.split(' ')[1:])
+            result = tweet(T_API, T_API_SECRET, T_TOKEN, T_TOKEN_SECRET,
+                           message)
+            send_message(chat, result)
 
         # Add your Commands Below in the following form
         # elif text.startswith('yourCommand '):
