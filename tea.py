@@ -4,16 +4,28 @@ import time
 import sys
 import os
 import urllib
-# import config  # uncomment for development
+
+# --------- services import
 from services.translate import translate
 from services.google import google_search
 from services.weather import weather
+from services.latest_news import latest_news
+from services.crypto_price import crypto_price
+from services.crypto_news import crypto_news
+from services.tweet import tweet
 
 # provide bot token from TOKEN envVar or config file
-TOKEN = os.environ.get('TOKEN') or config.TOKEN  # uncomment for dev
+TOKEN = os.environ.get('TOKEN')
 # other services tokens
-YANDEX = os.environ.get('YANDEX') or config.YANDEX  # uncomment for dev
-if not TOKEN:
+YANDEX = os.environ.get('YANDEX')
+CAP = os.environ.get('CAP')
+# twitter API stuff
+T_API = os.environ.get('T_API')
+T_API_SECRET = os.environ.get('T_API_SECRET')
+T_TOKEN = os.environ.get('T_TOKEN')
+T_TOKEN_SECRET = os.environ.get('T_TOKEN_SECRET')
+
+if not TOKEN or not YANDEX:
     print('Please provied your tokens. Refer to the README file')
     sys.exit(0)
 # base url for our request to the telegram APIs
@@ -86,15 +98,28 @@ def handle_updates(updates):
 
         elif text == '/start':  # handle /start command
             send_message(chat, 'Welcome to TBot.\nusage:\n'
-                         '/translate [message] - to translate '
-                         'a message from english to arabic')
+                         '/help - show help message\n'
+                         '/translate [message] - translate message '
+                         'from english to arabic\n'
+                         '/google message - search google for message\n'
+                         '/crypto_price symbol - get price for a '
+                         'crypto currency using its symbol\n'
+                         '/crypto_news - latest cryptocurrency news\n'
+                         '/news - latest news from BBC\n'
+                         '/weather - Temperature in Zagazig now\n')
 
         elif text == '/help':  # handle /help command
             send_message(chat,
                          'Available commands:\n'
                          '/help - show this message\n'
                          '/translate [message] - translate message '
-                         'from english to arabic')
+                         'from english to arabic\n'
+                         '/google message - search google for message\n'
+                         '/crypto_price symbol - get price for a '
+                         'crypto currency using its symbol\n'
+                         '/crypto_news - latest cryptocurrency news\n'
+                         '/news - latest news from BBC\n'
+                         '/weather - Temperature in Zagazig now\n')
 
         elif text.startswith('/translate '):  # /translate command
             message = ' '.join(text.split(' ')[1:])  # get message to translate
@@ -109,6 +134,25 @@ def handle_updates(updates):
         elif text.startswith('/weather'):  # weather command
             result = weather()
             send_message(chat, "The temperature in Zagazig now is: " + result)
+
+        elif text.startswith('/news'):  # news command
+            result = latest_news()
+            send_message(chat, result)
+
+        elif text.startswith('/crypto_price '):  # /crypto_price command
+            message = text.split(' ')[1]
+            result = crypto_price(CAP, message)
+            send_message(chat, str(result))
+
+        elif text == '/crypto_news':  # crypto_news command
+            result = crypto_news(CAP)
+            send_message(chat, str(result))
+
+        elif text.startswith('/tweet '):  # tweet command
+            message = ' '.join(text.split(' ')[1:])
+            result = tweet(T_API, T_API_SECRET, T_TOKEN, T_TOKEN_SECRET,
+                           message)
+            send_message(chat, result)
 
         # Add your Commands Below in the following form
         # elif text.startswith('yourCommand '):

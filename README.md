@@ -11,17 +11,19 @@
 - [ ] Text-to-Speech
 - [ ] speech-to-Text
 - [x] google search
-- [ ] latest news
-- [ ] Weather Today in Zagazig
+- [x] latest news
+- [x] Weather Today in Zagazig
 - [ ] pastebin this code
 - [ ] publicly-upload photo and return its link
 - [ ] publicly-upload video and return its link
 - [ ] publicly-upload file and return its link
 - [ ] calculator
-- [ ] CryptoCurrency Stock Market
+- [x] CryptoCurrency Price
+- [x] CryptoCurrency News
 - [ ] financial tracking
 - [ ] ToDo list manager
-- [ ] Tweet for me
+- [x] Tweet text
+- [ ] Tweet images with captions
 - [ ] Youtube search
 - [ ] NLP-based commands
 - [ ] What else?
@@ -35,11 +37,21 @@
 * `$pipenv shell` launch the a virtualenv
 * `$export TOKEN=<your-bot-token>`
 * `$export YANDEX=<yandex-translate-token>`
-* OR rename [config-sample.py](./config-sample.py) to `config.py` add your Variables
+* `$export CAP=<crypto-compare-token>`
+* `export T_API=<twitter-api-key>`
+* `export T_API_SECRET=<twitter-api-secret-key>`
+* `export T_TOKEN=<twitter-access-token>`
+* `export T_TOKEN_SECRET=<twitter-secret-token>`
 * `$python tea.py`
 * see how it works
 * open an issue with the feature you want to add
 * open the project folder in your code editor (e.g VS Code)
-* develop a new feature/fixbug
-* test if it's working on your test bot
-* make a pull request
+* to develop a new service:
+    - open `services` folder
+    - create new file `your-service-name.py`
+    - add you code
+    - import it in the main `tea.py` file
+    - follow the other services style (you should figure out this part from the code)
+    - test if it's working on your test bot
+    - make a pull request
+
