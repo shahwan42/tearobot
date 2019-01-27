@@ -22,7 +22,8 @@
 - [x] CryptoCurrency News
 - [ ] financial tracking
 - [ ] ToDo list manager
-- [ ] Tweet for me
+- [x] Tweet text
+- [ ] Tweet images with captions
 - [ ] Youtube search
 - [ ] NLP-based commands
 - [ ] What else?
@@ -37,6 +38,10 @@
 * `$export TOKEN=<your-bot-token>`
 * `$export YANDEX=<yandex-translate-token>`
 * `$export CAP=<crypto-compare-token>`
+* `export T_API=<twitter-api-key>`
+* `export T_API_SECRET=<twitter-api-secret-key>`
+* `export T_TOKEN=<twitter-access-token>`
+* `export T_TOKEN_SECRET=<twitter-secret-token>`
 * `$python tea.py`
 * see how it works
 * open an issue with the feature you want to add
