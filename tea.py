@@ -92,82 +92,102 @@ def handle_updates(updates):
     '''handles last updates from different users,
     parses the commands and send the proper message'''
     for update in updates['result']:
-        text = update['message']['text']  # extract msg text
-        chat = update['message']['chat']['id']  # extract chat_id
-        if not text.startswith('/'):  # if no command provided
-            send_message(chat, 'Please use one of the defined commands')
+        text = None  # msg text
+        chat = None  # chat_id
+        if 'message' in update:
+            chat = update['message']['chat']['id']
+            if 'text' in update['message']:
+                text = update['message']['text']  # extract msg text
+        if 'edited_message' in update:
+            chat = update['edited_message']['chat']['id']
+            if 'text' in update['edited_message']:
+                text = update['edited_message']['text']
 
-        elif text == '/start':  # handle /start command
-            send_message(chat, 'Welcome to TBot.\nusage:\n'
-                         '/help - show help message\n'
-                         '/translate [message] - translate message '
-                         'from english to arabic\n'
-                         '/google message - search google for message\n'
-                         '/crypto_price symbol - get price for a '
-                         'crypto currency using its symbol\n'
-                         '/crypto_news - latest cryptocurrency news\n'
-                         '/news - latest news from BBC\n'
-                         '/weather - Temperature in Zagazig now\n')
+        if text and chat:  # handle text messages only
+            if not text.startswith('/'):  # if no command provided
+                send_message(chat, 'Please use one of the defined commands')
 
-        elif text == '/help':  # handle /help command
-            send_message(chat,
-                         'Available commands:\n'
-                         '/help - show this message\n'
-                         '/translate [message] - translate message '
-                         'from english to arabic\n'
-                         '/google message - search google for message\n'
-                         '/crypto_price symbol - get price for a '
-                         'crypto currency using its symbol\n'
-                         '/crypto_news - latest cryptocurrency news\n'
-                         '/news - latest news from BBC\n'
-                         '/weather - Temperature in Zagazig now\n')
+            elif text == '/start':  # handle /start command
+                send_message(
+                    chat,
+                    'Welcome to TBot.\nusage:\n'
+                    '/help - show help message\n'
+                    '/translate [message] - translate message '
+                    'from english to arabic\n'
+                    '/google message - search google for message\n'
+                    '/crypto_price symbol - get price for a '
+                    'crypto currency using its symbol\n'
+                    '/crypto_news - latest cryptocurrency news\n'
+                    '/news - latest news from BBC\n'
+                    '/weather - Temperature in Zagazig now\n')
 
-        elif text.startswith('/translate '):  # /translate command
-            message = ' '.join(text.split(' ')[1:])  # get message to translate
-            result = translate(YANDEX, message)
-            send_message(chat, result)
+            elif text == '/help':  # handle /help command
+                send_message(
+                    chat,
+                    'Available commands:\n'
+                    '/help - show this message\n'
+                    '/translate [message] - translate message '
+                    'from english to arabic\n'
+                    '/google message - search google for message\n'
+                    '/crypto_price symbol - get price for a '
+                    'crypto currency using its symbol\n'
+                    '/crypto_news - latest cryptocurrency news\n'
+                    '/news - latest news from BBC\n'
+                    '/weather - Temperature in Zagazig now\n')
 
-        elif text.startswith('/google '):  # /google command
-            result = google_search(text)
-            result = '\n'.join(result)
-            send_message(chat, result)
+            elif text.startswith('/translate '):  # /translate command
+                message = ' '.join(text.split(' ')[1:])  # msg to translate
+                result = translate(YANDEX, message)
+                send_message(chat, result)
 
-        elif text.startswith('/weather'):  # weather command
-            result = weather()
-            send_message(chat, "The temperature in Zagazig now is: " + result)
+            elif text.startswith('/google '):  # /google command
+                result = google_search(text)
+                result = '\n'.join(result)
+                send_message(chat, result)
 
-        elif text.startswith('/news'):  # news command
-            result = latest_news()
-            send_message(chat, result)
+            elif text.startswith('/weather'):  # weather command
+                result = weather()
+                send_message(
+                    chat,
+                    f'The temperature in Zagazig now is: {result}')
 
-        elif text.startswith('/crypto_price '):  # /crypto_price command
-            message = text.split(' ')[1]
-            result = crypto_price(CAP, message)
-            send_message(chat, str(result))
+            elif text.startswith('/news'):  # news command
+                result = latest_news()
+                send_message(chat, result)
 
-        elif text == '/crypto_news':  # crypto_news command
-            result = crypto_news(CAP)
-            send_message(chat, str(result))
+            elif text.startswith('/crypto_price '):  # /crypto_price command
+                message = text.split(' ')[1]
+                result = crypto_price(CAP, message)
+                send_message(chat, str(result))
 
-        elif text.startswith('/tweet '):  # tweet command
-            message = ' '.join(text.split(' ')[1:])
-            result = tweet(T_API, T_API_SECRET, T_TOKEN, T_TOKEN_SECRET,
-                           message)
-            send_message(chat, result)
+            elif text == '/crypto_news':  # crypto_news command
+                result = crypto_news(CAP)
+                send_message(chat, str(result))
 
-        elif text.startswith('/calc '):
-            message = ' '.join(text.split(' ')[1:])
-            result = calc(message)
-            send_message(chat, result)
+            elif text.startswith('/tweet '):  # tweet command
+                message = ' '.join(text.split(' ')[1:])
+                result = tweet(
+                    T_API, T_API_SECRET, T_TOKEN, T_TOKEN_SECRET, message)
+                send_message(chat, result)
 
-        # Add your Commands Below in the following form
-        # elif text.startswith('yourCommand '):
-        #     statements to do
-        #     send_message(chat, result)
+            elif text.startswith('/calc '):
+                message = ' '.join(text.split(' ')[1:])
+                result = calc(message)
+                send_message(chat, result)
 
-        else:  # if command wasn't provided correctly
-            send_message(chat,
-                         'Please use one of the defined commands correctly!')
+            # Add your Commands Below in the following form
+            # elif text.startswith('yourCommand '):
+            #     statements to do
+            #     send_message(chat, result)
+
+            else:  # if command wasn't provided correctly
+                send_message(
+                    chat,
+                    'Please use one of the defined commands correctly!')
+        else:
+            send_message(
+                chat,
+                'Currently, I handle text messages only!')
 
 
 def main():
