@@ -119,7 +119,8 @@ def handle_updates(updates):
                     'crypto currency using its symbol\n'
                     '/crypto_news - latest cryptocurrency news\n'
                     '/news - latest news from BBC\n'
-                    '/weather - Temperature in Zagazig now\n')
+                    '/weather - Temperature in Zagazig now\n'
+                    '/calc expression - calculate expression\n')
 
             elif text == '/help':  # handle /help command
                 send_message(
@@ -133,7 +134,8 @@ def handle_updates(updates):
                     'crypto currency using its symbol\n'
                     '/crypto_news - latest cryptocurrency news\n'
                     '/news - latest news from BBC\n'
-                    '/weather - Temperature in Zagazig now\n')
+                    '/weather - Temperature in Zagazig now\n'
+                    '/calc expression - calculate expression\n')
 
             elif text.startswith('/translate '):  # /translate command
                 message = ' '.join(text.split(' ')[1:])  # msg to translate
@@ -196,7 +198,7 @@ def main():
         try:
             print('getting updates...')
             updates = get_updates(updates_offset)
-            if updates['result']:  # to prevent KeyError exception
+            if 'result' in updates:  # to prevent KeyError exception
                 if len(updates['result']) > 0:
                     updates_offset = last_update_id(updates) + 1
                     handle_updates(updates)
