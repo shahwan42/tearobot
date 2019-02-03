@@ -26,22 +26,20 @@
 - [ ] Tweet images with captions
 - [ ] Youtube search
 - [ ] NLP-based commands
+- [ ] how old? (predict the age of somebody from their photo)
 - [ ] What else?
 
-## To Contribute:
+## To Try/Contribute:
+
+> On a Linux System (figure out how to do it on windows on your own):
+
 * make sure you have `git`, `python(v3.6+)` and `pipenv` installed on your system
 * create a Bot on Telegram to test on. [see how](https://core.telegram.org/bots#3-how-do-i-create-a-bot)
 * clone the repo `$git clone https://github.com/ahmed75320/tearobot/`
 * go to project folder `$cd tearobot`
 * `$pipenv install` install dependencies and create a virtualenv
-* `$pipenv shell` launch the a virtualenv
-* `$export TOKEN=<your-bot-token>`
-* `$export YANDEX=<yandex-translate-token>`
-* `$export CAP=<crypto-compare-token>`
-* `export T_API=<twitter-api-key>`
-* `export T_API_SECRET=<twitter-api-secret-key>`
-* `export T_TOKEN=<twitter-access-token>`
-* `export T_TOKEN_SECRET=<twitter-secret-token>`
+* rename the `.env-sample` file to `.env` and provide your tokens
+* `$pipenv shell` launch the a virtual environment (this will source the .env variables into the virtual environment, so you don't have to export them yourself)
 * `$python tea.py`
 * see how it works
 * open an issue with the feature you want to add
@@ -49,9 +47,9 @@
 * to develop a new service:
     - open `services` folder
     - create new file `your-service-name.py`
-    - add you code
+    - add your code
     - import it in the main `tea.py` file
     - follow the other services style (you should figure out this part from the code)
     - test if it's working on your test bot
+    - add the service to the list above
     - make a pull request
-
