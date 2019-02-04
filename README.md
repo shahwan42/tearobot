@@ -27,6 +27,12 @@
 - [ ] Youtube search
 - [ ] NLP-based commands
 - [ ] how old? (predict the age of somebody from their photo)
+- [ ] Morning quote/ quote of today
+- [ ] Inspirational quotes (inspire_me)
+- [ ] Reminder (date/appointment)
+- [ ] Voice-based commands
+- [ ] Form registrations (like mutex's)
+- [ ] Pay my bills (teapay)
 - [ ] What else?
 
 ## To Try/Contribute:

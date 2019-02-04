@@ -14,7 +14,7 @@ def google_search(message):
         result.append(links[i].text)
         result.append(descriptions[i].text)
 
-    return result
+    return '\n'.join(result)
 
 
 if __name__ == '__main__':

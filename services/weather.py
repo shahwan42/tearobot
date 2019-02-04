@@ -5,9 +5,10 @@ from bs4 import BeautifulSoup
 def weather():
     page = requests.get(
         'https://www.google.com/search',
-        params={'q': 'weather+zagazig', 'oq': 'weather'})
+        params={'q': 'weather+zagazig', 'oq': 'weather', 'lang': 'en-GB'})
 
-    soup = BeautifulSoup(page.content, 'html.parser')
-    temp = soup.findAll('span', {'class': 'wob_t'})
-    temperature = temp[0].text
-    return temperature
+    return BeautifulSoup(page.content, 'html.parser').findAll('span', {'class': 'wob_t'})[0].text  # temperature
+
+
+if __name__ == '__main__':
+    print(weather())

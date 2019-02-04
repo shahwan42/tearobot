@@ -19,12 +19,12 @@ def tweet(t_api, t_api_secret, t_token, t_token_secret, text):
     return result
 
 
+# for development testing
 if __name__ == '__main__':
     T_API = os.environ.get('T_API')
     T_API_SECRET = os.environ.get('T_API_SECRET')
     T_TOKEN = os.environ.get('T_TOKEN')
     T_TOKEN_SECRET = os.environ.get('T_TOKEN_SECRET')
-    # Random text generation
-    text = ''.join(random.choices(string.ascii_uppercase + string.digits, k=8))
+    text = ''.join(random.choices(string.ascii_uppercase + string.digits, k=8))  # Random text generation
     result = tweet(T_API, T_API_SECRET, T_TOKEN, T_TOKEN_SECRET, text)
     print(result)

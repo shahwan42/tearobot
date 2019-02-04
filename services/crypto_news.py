@@ -3,10 +3,8 @@ import requests
 
 def crypto_news(CAP):
     '''Latest news for cryptocurrency'''
-    response = requests.get(
-        'https://min-api.cryptocompare.com/data/v2/news/?lang=EN',
-        params={'api_key': CAP})
-    content = response.json().get('Data')[-5:]
+    response = requests.get(f'https://min-api.cryptocompare.com/data/v2/news/?lang=EN&api_key={CAP}')
+    content = response.json().get('Data')[-5:]  # latest 5 news only
 
     if response.status_code == 200:
         result = []
@@ -15,8 +13,7 @@ def crypto_news(CAP):
             result.append(el['url'])
         return '\n'.join(result)
     else:
-        result = "We are very sorry. Error Happend, try again later."
-        return result
+        return 'Error Happend. Try again later.'
 
 
 # for development testing
