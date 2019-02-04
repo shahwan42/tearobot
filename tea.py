@@ -28,7 +28,7 @@ def dict_from_url(url):
 def get_updates(offset=None):
     '''Get updates after the offset'''
     # timeout will keep the pipe open and tell us when there're new updates
-    url = URL + 'getUpdates?timeout=90'
+    url = URL + f'getUpdates?timeout=90&allowed_updates={["messages"]}'
     if offset:
         url += f'&offset={offset}'  # add offset if exists
     return dict_from_url(url)  # return dict of latest updates
@@ -51,15 +51,9 @@ def handle_updates(updates):
     '''handles updates from different users, parses the commands and sends the proper message'''
     for update in updates['result']:
         text = None  # msg text
-        chat = None  # chat_id
-        if 'message' in update:
-            chat = update['message']['chat']['id']
-            if 'text' in update['message']:
-                text = update['message']['text']  # extract msg text
-        if 'edited_message' in update:
-            chat = update['edited_message']['chat']['id']
-            if 'text' in update['edited_message']:
-                text = update['edited_message']['text']
+        chat = update['message']['chat']['id']
+        if 'text' in update['message']:
+            text = update['message']['text']  # extract msg text
 
         if text and chat:
             if not text.startswith('/'):  # if no command provided
