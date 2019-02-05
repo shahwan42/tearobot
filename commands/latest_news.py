@@ -20,6 +20,5 @@ def latest_news():
     return '\n'.join(result[:10])
 
 
-# for development
 if __name__ == '__main__':
     print(latest_news())

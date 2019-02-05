@@ -2,9 +2,19 @@ import tweepy
 import os
 import random
 import string
+import sys
 
 
-def tweet(t_api, t_api_secret, t_token, t_token_secret, text):
+def tweet(text):
+    '''Tweet ``text`` to tiwtter account'''
+    t_api = os.environ.get('TWITTER_API')
+    t_api_secret = os.environ.get('TWITTER_API_SECRET')
+    t_token = os.environ.get('TWITTER_TOKEN')
+    t_token_secret = os.environ.get('TWITTER_TOKEN_SECRET')
+    if not t_api or not t_api_secret or not t_token or not t_token_secret:
+        sys.stderr.write('Please provide twitter tokens.')
+        sys.exit(1)
+
     auth = tweepy.OAuthHandler(t_api, t_api_secret)
     auth.set_access_token(t_token, t_token_secret)
     api = tweepy.API(auth)
@@ -19,12 +29,7 @@ def tweet(t_api, t_api_secret, t_token, t_token_secret, text):
     return result
 
 
-# for development testing
 if __name__ == '__main__':
-    T_API = os.environ.get('T_API')
-    T_API_SECRET = os.environ.get('T_API_SECRET')
-    T_TOKEN = os.environ.get('T_TOKEN')
-    T_TOKEN_SECRET = os.environ.get('T_TOKEN_SECRET')
     text = ''.join(random.choices(string.ascii_uppercase + string.digits, k=8))  # Random text generation
-    result = tweet(T_API, T_API_SECRET, T_TOKEN, T_TOKEN_SECRET, text)
+    result = tweet(text)
     print(result)

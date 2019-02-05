@@ -39,12 +39,12 @@
 
 > On a Linux System (figure out how to do it on windows on your own):
 
-* make sure you have `git`, `python(v3.6+)` and `pipenv` installed on your system
+* make sure you have `git`, `python(v3.7 recommended)` and `pipenv` installed on your system
 * create a Bot on Telegram to test on. [see how](https://core.telegram.org/bots#3-how-do-i-create-a-bot)
 * clone the repo `$git clone https://github.com/ahmed75320/tearobot/`
 * go to project folder `$cd tearobot`
 * `$pipenv install` install dependencies and create a virtualenv
-* rename the `.env-sample` file to `.env` and provide your tokens
+* rename the `.env-sample` file to `.env` and provide your tokens inside it
 * `$pipenv shell` launch the a virtual environment (this will source the .env variables into the virtual environment, so you don't have to export them yourself)
 * `$python tea.py`
 * see how it works

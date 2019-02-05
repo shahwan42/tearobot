@@ -2,22 +2,28 @@
 import requests
 import time
 import sys
+import os
 import urllib
 
 # --------- project modules
-import const
-# --------- services
-from services.translate import translate
-from services.google import google_search
-from services.weather import weather
-from services.latest_news import latest_news
-from services.crypto_price import crypto_price
-from services.crypto_news import crypto_news
-from services.tweet import tweet
-from services.calculator import calculate
+# --------- commands
+from commands.start import start_command
+from commands.help import help_command
+from commands.translate import translate
+from commands.google import google_search
+from commands.weather import weather
+from commands.latest_news import latest_news
+from commands.crypto_price import crypto_price
+from commands.crypto_news import crypto_news
+from commands.tweet import tweet
+from commands.calculator import calculate
 
+bot_token = os.environ.get('BOT_TOKEN')
+if not bot_token:
+    sys.stderr.write('Provide your telegram bot token!')
+    sys.exit(1)
 # base url for our requests to the telegram APIs
-URL = f'https://api.telegram.org/bot{const.TOKEN}/'
+URL = f'https://api.telegram.org/bot{bot_token}/'
 
 
 def dict_from_url(url):
@@ -28,7 +34,7 @@ def dict_from_url(url):
 def get_updates(offset=None):
     '''Get updates after the offset'''
     # timeout will keep the pipe open and tell us when there're new updates
-    url = URL + f'getUpdates?timeout=90&allowed_updates={["messages"]}'
+    url = URL + f'getUpdates?timeout=120&allowed_updates={["messages"]}'
     if offset:
         url += f'&offset={offset}'  # add offset if exists
     return dict_from_url(url)  # return dict of latest updates
@@ -47,97 +53,104 @@ def last_update_id(updates):
     return max(update_ids)  # the last update is the higher one
 
 
+current_command = None  # stores currently operating command
+
+
+def is_available_command(command):
+    '''Checks if ``command`` is available in TBot commnds'''
+    available_commands = [
+        '/start', '/help', '/translate', '/google', '/weather', '/news', '/crypto_price', '/crypto_news',
+        '/calculate', '/tweet']
+    if command in available_commands:
+        return True
+    return False
+
+
+def command_takes_arguments(command):
+    '''Checks if ``command`` operates on arguments or not'''
+    commands_with_argument = ['/translate', '/google', '/crypto_price', '/calculate', '/tweet']
+    if command in commands_with_argument:
+        return True
+    return False
+
+
+def get_hint_message(command):
+    '''Returns a hint message of ``command``'''
+    commands_hint = {
+        '/start': '',
+        '/help': '',
+        '/translate': 'I will translate your next message from english to arabic',
+        '/google': 'What do you want to google?',
+        '/weather': '',
+        '/news': '',
+        '/crypto_price': 'Provide the symbol of a cryptocurrency',
+        '/crypto_news': '',
+        '/calculate': 'Write a mathematical expression to calculate',
+        '/tweet': "Let's tweet on TBot's twitter account!"
+    }
+    return commands_hint.get(command)
+
+
+def get_command_handler(command):
+    '''Returns a callable function according to ``command``'''
+    command_service = {
+        '/start': start_command,
+        '/help': help_command,
+        '/translate': translate,
+        '/google': google_search,
+        '/weather': weather,
+        '/news': latest_news,
+        '/crypto_price': crypto_price,
+        '/crypto_news': crypto_news,
+        '/calculate': calculate,
+        '/tweet': tweet
+    }
+    return command_service.get(command)
+
+
 def handle_updates(updates):
-    '''handles updates from different users, parses the commands and sends the proper message'''
-    for update in updates['result']:
+    global current_command  # use current_command var from global scope
+    for update in updates['result']:  # loop through updates
         text = None  # msg text
-        chat = update['message']['chat']['id']
-        if 'text' in update['message']:
-            text = update['message']['text']  # extract msg text
-
-        if text and chat:
-            if not text.startswith('/'):  # if no command provided
-                send_message(chat, 'Please use one of the defined commands')
-
-            elif text == '/start':  # handle /start command
-                send_message(
-                    chat,
-                    'Welcome to TBot.\n'
-                    'usage:\n'
-                    '/help - show help message\n'
-                    '/translate - translate message from english to arabic\n'
-                    '/google - Google search\n'
-                    '/crypto_price - get price for a crypto currency using its symbol\n'
-                    '/crypto_news - Latest cryptocurrency news\n'
-                    '/news - Latest news from BBC\n'
-                    '/weather - Temperature in Zagazig now\n'
-                    '/calculate - Calculate mathematical expression\n'
-                    '/tweet - Tweet to our Twitter account\n')
-
-            elif text == '/help':  # handle /help command
-                send_message(
-                    chat,
-                    'Available commands:\n'
-                    '/help - show this message\n'
-                    '/translate - translate message from english to arabic\n'
-                    '/google - Google search\n'
-                    '/crypto_price - get price for a crypto currency using its symbol\n'
-                    '/crypto_news - Latest cryptocurrency news\n'
-                    '/news - Latest news from BBC\n'
-                    '/weather - Temperature in Zagazig now\n'
-                    '/calculate - Calculate mathematical expression\n'
-                    '/tweet - Tweet to our Twitter account\n')
-
-            elif text.startswith('/translate '):  # /translate command
-                send_message(chat, translate(const.YANDEX, ' '.join(text.split(' ')[1:])))
-
-            elif text.startswith('/google '):  # /google command
-                send_message(chat, google_search(' '.join(text.split(' ')[1:])))
-
-            elif text.startswith('/weather'):  # weather command
-                send_message(chat, f'The temperature in Zagazig now is: {weather()}')
-
-            elif text.startswith('/news'):  # news command
-                send_message(chat, latest_news())
-
-            elif text.startswith('/crypto_price '):  # /crypto_price command
-                send_message(chat, crypto_price(const.CAP, text.split(' ')[1]))
-
-            elif text == '/crypto_news':  # crypto_news command
-                send_message(chat, crypto_news(const.CAP))
-
-            elif text.startswith('/tweet '):  # tweet command
-                result = tweet(
-                    const.T_API, const.T_API_SECRET, const.T_TOKEN, const.T_TOKEN_SECRET,
-                    ' '.join(text.split(' ')[1:]))
-                send_message(chat, result)
-
-            elif text.startswith('/calculate '):  # Calculate command
-                send_message(chat, calculate(' '.join(text.split(' ')[1:])))
-
-            # Add your Commands Below in the following form
-            # elif text.startswith('yourCommand '):
-            #     statements to do
-            #     send_message(chat, result)
-
-            else:  # if command wasn't provided correctly
-                send_message(chat, 'Please use one of the defined commands correctly!')
-        else:  # in case of files/images
-            send_message(chat, 'Currently, I handle text messages only!')
+        chat = update['message']['chat']['id']  # chat id
+        if 'text' in update['message']:  # handle text messages only
+            text = update['message']['text'].strip()  # extract msg text
+            if text and chat:  # make sure we have txt msg and chat_id
+                if text.startswith('/'):  # if command
+                    if is_available_command(text):  # if command is available
+                        current_command = text  # set current command
+                        if command_takes_arguments(current_command):  # if command operates on arg
+                            hint_message = get_hint_message(current_command)  # get command hint message
+                            send_message(chat, hint_message)  # send a help message to recieve argument
+                        else:  # if command is available and does not operate on arg
+                            # execute command directly
+                            send_message(chat, get_command_handler(current_command)())
+                            # then unset current_command, commands_without_args execute once!
+                            current_command = None
+                    else:  # if command is not available
+                        send_message(chat, 'Use a defined command.')
+                else:  # if sent message does not start with a slash
+                    if current_command:  # should be an argument if current_command is set
+                        current_command_service = get_command_handler(current_command)  # get se
+                        send_message(chat, current_command_service(text))
+                    else:
+                        send_message(chat, 'Use a defined command.')
+        else:  # if no text message
+            send_message(chat, 'I handle text messages only!')
 
 
 def main():
     updates_offset = None  # track last_update_id to use it as offset
-    while True:
+    while True:  # infinitely listen to new updates (as long as the script is running)
         try:
             print('getting updates...')
-            updates = get_updates(updates_offset)
+            updates = get_updates(updates_offset)  # get new updates after last handled one
             if 'result' in updates:  # to prevent KeyError exception
-                if len(updates['result']) > 0:
-                    updates_offset = last_update_id(updates) + 1
-                    handle_updates(updates)
+                if len(updates['result']) > 0:  # make sure updates list is longer than 0
+                    updates_offset = last_update_id(updates) + 1  # to remove handled updates
+                    handle_updates(updates)  # handle new (unhandled) updates
             time.sleep(0.5)
-        except KeyboardInterrupt:  # handle Ctrl-C
+        except KeyboardInterrupt:  # exit on Ctrl-C
             print('\nquiting...')
             sys.exit(0)
 
