@@ -1,7 +1,7 @@
 # TBot
   A toy telegram bot using python. [Try it](https://t.me/tearobot)
 
-## Services:
+## features:
 - [x] En-Ar word Translator
 - [x] En-Ar sentence translation
 - [ ] lang-lang translation
@@ -37,9 +37,9 @@
 
 ## To Try/Contribute:
 
-> On a Linux System (figure out how to do it on windows on your own):
+> On a Linux System (figure out how to do it on windows yourself):
 
-* make sure you have `git`, `python(v3.7 recommended)` and `pipenv` installed on your system
+* make sure you have `git`, `python(v3.7)` and `pipenv` installed on your system
 * create a Bot on Telegram to test on. [see how](https://core.telegram.org/bots#3-how-do-i-create-a-bot)
 * clone the repo `$git clone https://github.com/ahmed75320/tearobot/`
 * go to project folder `$cd tearobot`
@@ -50,12 +50,12 @@
 * see how it works
 * open an issue with the feature you want to add
 * open the project folder in your code editor (e.g VS Code)
-* to develop a new service:
-    - open `services` folder
-    - create new file `your-service-name.py`
+* to develop a new command/edit a current one:
+    - open `commands` folder
+    - create new file `your-command-name.py` OR open a current command file you want to update
     - add your code
     - import it in the main `tea.py` file
-    - follow the other services style (you should figure out this part from the code)
+    - follow the other command style (you should figure out this part from the code)
     - test if it's working on your test bot
-    - add the service to the list above
+    - add the command to the list above
     - make a pull request
