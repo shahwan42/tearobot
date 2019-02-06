@@ -17,6 +17,7 @@ def crypto_news():
         for el in content:
             result.append(el['title'])
             result.append(el['url'])
+            result.append('\n')
         return '\n'.join(result)
     else:
         return 'Error Happend. Try again later.'
