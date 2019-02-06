@@ -10,4 +10,5 @@ def start_command():
         '/news - Latest news from BBC\n' \
         '/weather - Temperature in Zagazig now\n' \
         '/calculate - Calculate mathematical expression\n' \
-        '/tweet - Tweet to our Twitter account\n'
+        '/tweet - Tweet to our Twitter account\n' \
+	'/urlImage-text  - convert image to text\n' 

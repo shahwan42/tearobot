@@ -17,6 +17,8 @@ from commands.crypto_price import crypto_price
 from commands.crypto_news import crypto_news
 from commands.tweet import tweet
 from commands.calculator import calculate
+from commands.OCR import ocr_space_file
+from commands.OCR import ocr_space_url
 
 bot_token = os.environ.get('BOT_TOKEN')
 if not bot_token:
@@ -60,7 +62,7 @@ def is_available_command(command):
     """Checks if ``command`` is available in TBot commnds"""
     available_commands = [
         '/start', '/help', '/translate', '/google', '/weather', '/news', '/crypto_price', '/crypto_news',
-        '/calculate', '/tweet']
+        '/calculate', '/tweet','/urlImage-text']
     if command in available_commands:
         return True
     return False
@@ -68,7 +70,7 @@ def is_available_command(command):
 
 def command_takes_arguments(command):
     """Checks if ``command`` operates on arguments or not"""
-    commands_with_argument = ['/translate', '/google', '/crypto_price', '/calculate', '/tweet']
+    commands_with_argument = ['/translate', '/google', '/crypto_price', '/calculate', '/tweet','/urlImage-text']
     if command in commands_with_argument:
         return True
     return False
@@ -86,7 +88,8 @@ def get_hint_message(command):
         '/crypto_price': 'Provide the symbol of a cryptocurrency',
         '/crypto_news': '',
         '/calculate': 'Write a mathematical expression to calculate',
-        '/tweet': "Let's tweet on TBot's twitter account!"
+        '/tweet': "Let's tweet on TBot's twitter account!",
+	'/urlImage-text' :   "Converts image provided from URL to text"
     }
     return commands_hint.get(command)
 
@@ -103,7 +106,8 @@ def get_command_handler(command):
         '/crypto_price': crypto_price,
         '/crypto_news': crypto_news,
         '/calculate': calculate,
-        '/tweet': tweet
+        '/tweet': tweet,
+	'/urlImage-text':ocr_space_url
     }
     return command_service.get(command)
 
