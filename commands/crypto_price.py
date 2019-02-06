@@ -4,7 +4,7 @@ import sys
 
 
 def crypto_price(coin_symbol):
-    '''cryptocurrency price for ``coin_symbol'''
+    """cryptocurrency price for ``coin_symbol"""
     api_key = os.environ.get('CRYPTOCOMPARE_API_KEY')
     if not api_key:
         sys.stderr.write('Please provide CryptoCompare api key.')

@@ -1,4 +1,5 @@
 def help_command():
+    """Returns available commands with their help messages"""
     return 'Available commands:\n' \
         '/help - Show this message\n' \
         '/translate - Translate message from english to arabic\n' \

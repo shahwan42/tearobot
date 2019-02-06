@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 
 
 def google_search(message):
-    '''google for ``message``'''
+    """google for ``message``"""
     page = requests.get('https://www.google.com/search', params={'q': message})
     soup = BeautifulSoup(page.content, 'html.parser')  # WebPage in HTML
     links = soup.findAll('cite')  # links list

@@ -28,6 +28,6 @@
 
 * Follow [the zen of python](https://www.python.org/dev/peps/pep-0020/)
 * Max line length 119
-* Use `'` for strings and `'''` for docstrings. Only use `"` when you want to put `'` inside the string, or inside f-strings
+* Use `'` for strings and `"""` for docstrings. Only use `"` when you want to put `'` inside the string, or inside f-strings
 * Please do not just copy code and put it here, make it pretty and consistent to our code
 * Add verbose comments to your code. It's meant for educational purposes, mainly.

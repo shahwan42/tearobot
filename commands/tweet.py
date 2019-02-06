@@ -6,7 +6,7 @@ import sys
 
 
 def tweet(text):
-    '''Tweet ``text`` to tiwtter account'''
+    """Tweet ``text`` to tiwtter account"""
     t_api = os.environ.get('TWITTER_API')
     t_api_secret = os.environ.get('TWITTER_API_SECRET')
     t_token = os.environ.get('TWITTER_TOKEN')

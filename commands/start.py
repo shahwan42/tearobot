@@ -1,4 +1,5 @@
 def start_command():
+    """Returns start command message"""
     return 'Welcome to TBot.\n' \
         'Usage:\n' \
         '/help - Show help message\n' \

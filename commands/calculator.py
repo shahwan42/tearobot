@@ -3,6 +3,7 @@ import urllib
 
 
 def calculate(expr):
+    """Calculates ``expr`` and returns the result"""
     response = requests.get(f'http://api.mathjs.org/v4/?expr={urllib.parse.quote(expr)}')
     if response.status_code == 200:
         return f'Result: {response.text}'

@@ -3,6 +3,7 @@ import requests
 
 
 def latest_news():
+    """Latest news from bbc"""
     url = 'https://www.bbc.com'
     page = requests.get(url)
 

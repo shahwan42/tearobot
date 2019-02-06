@@ -4,7 +4,7 @@ import sys
 
 
 def translate(message):
-    '''Translate ``message`` from english to arabic'''
+    """Translate ``message`` from english to arabic"""
     yandex_token = os.environ.get('YANDEX_TRANSLATE_TOKEN')
     if not yandex_token:
         sys.stderr.write('Please Provide Yandex Translate Token')

@@ -27,12 +27,12 @@ URL = f'https://api.telegram.org/bot{bot_token}/'
 
 
 def dict_from_url(url):
-    '''return json response in form of python dictionary'''
+    """return json response in form of python dictionary"""
     return requests.get(url).json()  # return the result as a python dictionary
 
 
 def get_updates(offset=None):
-    '''Get updates after the offset'''
+    """Get updates after the offset"""
     # timeout will keep the pipe open and tell us when there're new updates
     url = URL + f'getUpdates?timeout=120&allowed_updates={["messages"]}'
     if offset:
@@ -41,12 +41,12 @@ def get_updates(offset=None):
 
 
 def send_message(chat_id, text):
-    '''Encoeds ``text`` using url-based encoding and send it to ``chat_id``'''
+    """Encoeds ``text`` using url-based encoding and send it to ``chat_id``"""
     requests.get(URL + f'sendMessage?chat_id={chat_id}&text={urllib.parse.quote_plus(text)}')
 
 
 def last_update_id(updates):
-    '''takes dict of updates and return the id of last one'''
+    """takes dict of updates and return the id of last one"""
     update_ids = []
     for update in updates['result']:
         update_ids.append(int(update['update_id']))
@@ -57,7 +57,7 @@ current_command = None  # stores currently operating command
 
 
 def is_available_command(command):
-    '''Checks if ``command`` is available in TBot commnds'''
+    """Checks if ``command`` is available in TBot commnds"""
     available_commands = [
         '/start', '/help', '/translate', '/google', '/weather', '/news', '/crypto_price', '/crypto_news',
         '/calculate', '/tweet']
@@ -67,7 +67,7 @@ def is_available_command(command):
 
 
 def command_takes_arguments(command):
-    '''Checks if ``command`` operates on arguments or not'''
+    """Checks if ``command`` operates on arguments or not"""
     commands_with_argument = ['/translate', '/google', '/crypto_price', '/calculate', '/tweet']
     if command in commands_with_argument:
         return True
@@ -75,7 +75,7 @@ def command_takes_arguments(command):
 
 
 def get_hint_message(command):
-    '''Returns a hint message of ``command``'''
+    """Returns a hint message of ``command``"""
     commands_hint = {
         '/start': '',
         '/help': '',
@@ -92,7 +92,7 @@ def get_hint_message(command):
 
 
 def get_command_handler(command):
-    '''Returns a callable function according to ``command``'''
+    """Returns a callable function according to ``command``"""
     command_service = {
         '/start': start_command,
         '/help': help_command,
@@ -109,6 +109,7 @@ def get_command_handler(command):
 
 
 def handle_updates(updates):
+    """Handles incoming updates to the bot"""
     global current_command  # use current_command var from global scope
     for update in updates['result']:  # loop through updates
         text = None  # msg text
@@ -140,6 +141,7 @@ def handle_updates(updates):
 
 
 def main():
+    """The entry point"""
     updates_offset = None  # track last_update_id to use it as offset
     while True:  # infinitely listen to new updates (as long as the script is running)
         try:
