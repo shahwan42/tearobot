@@ -10,4 +10,4 @@ def help_command():
         '/weather - Temperature in Zagazig now\n' \
         '/calculate - Calculate a mathematical expression\n' \
         '/tweet - Tweet to our Twitter account\n' \
-        '/urlImage-text  - convert image to text\n' 
+        '/ocr  - convert image to text\n'
