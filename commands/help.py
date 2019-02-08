@@ -9,4 +9,5 @@ def help_command():
         '/news - Latest news from BBC\n' \
         '/weather - Temperature in Zagazig now\n' \
         '/calculate - Calculate a mathematical expression\n' \
-        '/tweet - Tweet to our Twitter account\n'
+        '/tweet - Tweet to our Twitter account\n' \
+        '/ocr  - convert image to text\n'

@@ -12,7 +12,7 @@
 - [ ] lang-lang translation
 - [ ] Conversational Bot
 - [ ] Recognise and Translate (translate from image)
-- [ ] Extract Text from Image (OCR)
+- [x] Extract Text from Image (OCR)
 - [ ] Text-to-Speech
 - [ ] speech-to-Text
 - [x] google search
