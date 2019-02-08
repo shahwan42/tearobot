@@ -62,7 +62,7 @@ def is_available_command(command):
     """Checks if ``command`` is available in TBot commnds"""
     available_commands = [
         '/start', '/help', '/translate', '/google', '/weather', '/news', '/crypto_price', '/crypto_news',
-        '/calculate', '/tweet','/urlImage-text']
+        '/calculate', '/tweet', '/ocr']
     if command in available_commands:
         return True
     return False
@@ -70,7 +70,7 @@ def is_available_command(command):
 
 def command_takes_arguments(command):
     """Checks if ``command`` operates on arguments or not"""
-    commands_with_argument = ['/translate', '/google', '/crypto_price', '/calculate', '/tweet','/urlImage-text']
+    commands_with_argument = ['/translate', '/google', '/crypto_price', '/calculate', '/tweet', '/ocr']
     if command in commands_with_argument:
         return True
     return False
@@ -89,7 +89,7 @@ def get_hint_message(command):
         '/crypto_news': '',
         '/calculate': 'Write a mathematical expression to calculate',
         '/tweet': "Let's tweet on TBot's twitter account!",
-	'/urlImage-text' :   "Converts image provided from URL to text"
+        '/ocr' :   "Send the URL of the image you want to extract text from"
     }
     return commands_hint.get(command)
 
@@ -107,7 +107,7 @@ def get_command_handler(command):
         '/crypto_news': crypto_news,
         '/calculate': calculate,
         '/tweet': tweet,
-	'/urlImage-text':ocr_space_url
+        '/ocr': ocr_space_url
     }
     return command_service.get(command)
 
