@@ -1,5 +1,7 @@
 # To Contribute:
 
+## Install
+
 > On a Linux System (figure out how to do it on windows yourself):
 
 * make sure you have `git`, `python(v3.7)` and `pipenv` installed on your system
@@ -11,17 +13,17 @@
 * `$pipenv shell` launch the a virtual environment (this will source the .env variables into the virtual environment, so you don't have to export them yourself)
 * `$python tea.py`
 * see how it works
-* open an issue with the feature you want to add (if it is not listed above)
-* open the project folder in your code editor (e.g VS Code)
-* to develop a new command/edit a current one:
-    - open `commands` folder
-    - create new file `your-command-name.py` OR open a current command file you want to update
-    - add your code [Follow our code style](#Coding-Style)
-    - import it in the main `tea.py` file
-    - follow the other commands style (you should figure out this part from the code)
-    - test if it's working on your test bot
-    - add the command to the list above
-    - make a pull request
+
+## code
+
+* to develop a new feature/fixbug (follow our workflow):
+    1. fork the project
+    2. clone your fork locally
+    3. create a new branch (e.g new-feature-branch)
+    4. add some code (following our coding-style) and commits with sensible messages that descirbe each commit clearly
+    5. push your new-feature-branch to your fork on github (`$ git push origin new-feature-branch`)
+    6. create a Pull Request (using github web interface)
+        the source is your YourFork/new-feature-branch and the destination is myRepo/dev branch
 
 
 ## Coding-Style
@@ -31,3 +33,4 @@
 * Use `'` for strings and `"""` for docstrings. Only use `"` when you want to put `'` inside the string, or inside f-strings
 * Please do not just copy code and put it here, make it pretty and consistent to our code
 * Add verbose comments to your code. It's meant for educational purposes, mainly.
+
