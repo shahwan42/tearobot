@@ -6,7 +6,7 @@
 
 * make sure you have `git`, `python(v3.7)` and `pipenv` installed on your system
 * create a Bot on Telegram to test on. [see how](https://core.telegram.org/bots#3-how-do-i-create-a-bot)
-* clone the repo `$git clone https://github.com/ahmed75320/tearobot/`
+* clone the repo `$git clone https://github.com/ash753/tearobot/`
 * go to project folder `$cd tearobot`
 * `$pipenv install` install dependencies and create a virtualenv
 * rename the `.env-sample` file to `.env` and provide your tokens inside it
@@ -16,7 +16,7 @@
 
 ## code
 
-* to develop a new feature/fixbug (follow our workflow):
+* to develop a new feature/bugfix (follow our workflow):
     1. fork the project
     2. clone your fork locally
     3. create a new branch (e.g new-feature-branch)
