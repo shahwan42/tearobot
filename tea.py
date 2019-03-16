@@ -7,18 +7,18 @@ import urllib
 
 # --------- project modules
 # --------- commands
-from commands.start import start_command
-from commands.help import help_command
-from commands.translate import translate
-from commands.google import google_search
-from commands.weather import weather
-from commands.latest_news import latest_news
-from commands.crypto_price import crypto_price
-from commands.crypto_news import crypto_news
-from commands.tweet import tweet
-from commands.calculator import calculate
-from commands.OCR import ocr_space_file
-from commands.OCR import ocr_space_url
+from tbot.commands import start_command
+from tbot.commands import help_command
+from tbot.commands import translate
+from tbot.commands import google_search
+from tbot.commands import weather
+from tbot.commands import latest_news
+from tbot.commands import crypto_price
+from tbot.commands import crypto_news
+from tbot.commands import tweet
+from tbot.commands import calculate
+# from tbot.commands import ocr_space_file
+from tbot.commands import ocr_space_url
 
 bot_token = os.environ.get('BOT_TOKEN')
 if not bot_token:
@@ -43,7 +43,7 @@ def get_updates(offset=None):
 
 
 def send_message(chat_id, text):
-    """Encoeds ``text`` using url-based encoding and send it to ``chat_id``"""
+    """Encodes ``text`` using url-based encoding and send it to ``chat_id``"""
     requests.get(URL + f'sendMessage?chat_id={chat_id}&text={urllib.parse.quote_plus(text)}')
 
 
@@ -59,7 +59,7 @@ current_command = None  # stores currently operating command
 
 
 def is_available_command(command):
-    """Checks if ``command`` is available in TBot commnds"""
+    """Checks if ``command`` is available in TBot commands"""
     available_commands = [
         '/start', '/help', '/translate', '/google', '/weather', '/news', '/crypto_price', '/crypto_news',
         '/calculate', '/tweet', '/ocr']
@@ -89,7 +89,7 @@ def get_hint_message(command):
         '/crypto_news': '',
         '/calculate': 'Write a mathematical expression to calculate',
         '/tweet': "Let's tweet on TBot's twitter account!",
-        '/ocr' :   "Send the URL of the image you want to extract text from"
+        '/ocr':   "Send the URL of the image you want to extract text from"
     }
     return commands_hint.get(command)
 
