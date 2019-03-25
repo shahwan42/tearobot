@@ -1,7 +1,6 @@
 # TBot
 
-    (TeaBot, use it while drinking tea ^^ )
-    It is a toy telegram-bot built using Python. Meant for educational purposes, mainly.
+    A toy telegram-bot built using Python. Meant for educational purposes.
 
 [Try it](https://t.me/tearobot)
 > It might not work all the time
@@ -10,13 +9,9 @@
 
 * `/help` - Show help message
 * `/translate` - Translate message from english to arabic
-* `/google` - Google search
-* `/crypto_price` - Get price for a crypto currency using its symbol
-* `/crypto_news` - Latest cryptocurrency news
-* `/news` - Latest news from BBC
-* `/weather` - Temperature in Zagazig now
+* `/weather` - Weather in `Zagazig, Egypt` now
 * `/calculate` - Calculate mathematical expression
 * `/tweet` - Tweet to our Twitter account
-* `/ocr`  - extract text from image
+* `/ocr_url`  - extract text from image using its url
 
 [follow this to contribute](./CONTRIBUTING.md)

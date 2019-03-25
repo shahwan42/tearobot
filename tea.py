@@ -9,16 +9,12 @@ import urllib
 # --------- commands
 from tbot.commands import start_command
 from tbot.commands import help_command
-from tbot.commands import translate
-from tbot.commands import google_search
 from tbot.commands import weather
-from tbot.commands import latest_news
-from tbot.commands import crypto_price
-from tbot.commands import crypto_news
-from tbot.commands import tweet
+from tbot.commands import translate
 from tbot.commands import calculate
-# from tbot.commands import ocr_space_file
-from tbot.commands import ocr_space_url
+from tbot.commands import tweet
+from tbot.commands import ocr_url
+# from tbot.commands import ocr_file
 
 bot_token = os.environ.get('BOT_TOKEN')
 if not bot_token:
@@ -60,9 +56,7 @@ current_command = None  # stores currently operating command
 
 def is_available_command(command):
     """Checks if ``command`` is available in TBot commands"""
-    available_commands = [
-        '/start', '/help', '/translate', '/google', '/weather', '/news', '/crypto_price', '/crypto_news',
-        '/calculate', '/tweet', '/ocr']
+    available_commands = ['/start', '/help', '/weather', '/translate', '/calculate', '/tweet', '/ocr_url']
     if command in available_commands:
         return True
     return False
@@ -70,7 +64,7 @@ def is_available_command(command):
 
 def command_takes_arguments(command):
     """Checks if ``command`` operates on arguments or not"""
-    commands_with_argument = ['/translate', '/google', '/crypto_price', '/calculate', '/tweet', '/ocr']
+    commands_with_argument = ['/translate', '/calculate', '/tweet', '/ocr_url']
     if command in commands_with_argument:
         return True
     return False
@@ -81,15 +75,11 @@ def get_hint_message(command):
     commands_hint = {
         '/start': '',
         '/help': '',
-        '/translate': 'I will translate your next message from english to arabic',
-        '/google': 'What do you want to google?',
         '/weather': '',
-        '/news': '',
-        '/crypto_price': 'Provide the symbol of a cryptocurrency',
-        '/crypto_news': '',
+        '/translate': 'I will translate your next message from english to arabic',
         '/calculate': 'Write a mathematical expression to calculate',
         '/tweet': "Let's tweet on TBot's twitter account!",
-        '/ocr':   "Send the URL of the image you want to extract text from"
+        '/ocr_url':   'Send the URL of the image you want to extract text from'
     }
     return commands_hint.get(command)
 
@@ -99,15 +89,11 @@ def get_command_handler(command):
     command_service = {
         '/start': start_command,
         '/help': help_command,
-        '/translate': translate,
-        '/google': google_search,
         '/weather': weather,
-        '/news': latest_news,
-        '/crypto_price': crypto_price,
-        '/crypto_news': crypto_news,
+        '/translate': translate,
         '/calculate': calculate,
         '/tweet': tweet,
-        '/ocr': ocr_space_url
+        '/ocr_url': ocr_url
     }
     return command_service.get(command)
 

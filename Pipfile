@@ -9,7 +9,6 @@ flake8 = "*"
 
 [packages]
 requests = "*"
-bs4 = "*"
 tweepy = "*"
 
 [requires]
