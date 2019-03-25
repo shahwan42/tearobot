@@ -1,6 +1,6 @@
 # TBot
 
-    (TeaBot, uses it while drinking tea ^^ )
+    (TeaBot, use it while drinking tea ^^ )
     It is a toy telegram-bot built using Python. Meant for educational purposes, mainly.
 
 [Try it](https://t.me/tearobot)
