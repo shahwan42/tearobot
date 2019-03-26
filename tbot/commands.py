@@ -46,7 +46,13 @@ def ocr_url(url, overlay=False, language='eng'):
     payload = {'url': url, 'isOverlayRequired': overlay, 'apikey': api_key, 'language': language, }
     r = requests.post('https://api.ocr.space/parse/image', data=payload,)
     results = r.json()
-    return results['ParsedResults'][0]['ParsedText']
+    # if 'ParsedResults' in results:
+    #     if 'ParsedText' in results['ParsedResults'][0]:
+    #         return results['ParsedResults'][0]['ParsedText']
+    try:
+        return results['ParsedResults'][0]['ParsedText']
+    except Exception:
+        return 'Error. Please provide a valid URL'
 
 
 def ocr_file(filename, overlay=False, language='eng'):
