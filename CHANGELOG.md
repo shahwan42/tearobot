@@ -1,5 +1,12 @@
 # 0.1.1
 
+* try 0.1.1 patch
+* added changelog section
+* handle invalid image url inside ocr_url command
+* deleted release-conf
+
+# 0.1.1
+
 - handle invalid image url inside ocr_url command
 
 # 0.1.0
