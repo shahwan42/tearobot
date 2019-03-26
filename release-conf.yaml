@@ -1,8 +1,5 @@
 # whether to allow bot to make PRs based on issues
 trigger_on_issue: true
 pypi: false
-changelog:
-  - handle invalid URLs passed to ocr_url 
 labels:
-  - telegram bot
-  - TBot
+  - patch
