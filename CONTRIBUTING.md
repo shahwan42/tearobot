@@ -23,9 +23,9 @@
   * create a new branch for the feature to add / bug to fix (`$ git checkout -b new-feature_bug-branch`)
   * add your code (following our [coding-style](#Coding-Style))
   * test if it works (test on your bot you created earlier)
-  * and commits with sensible messages that describe each commit clearly
+  * add commits with sensible messages that describe each commit clearly
   * merge your `new-feature_bug-branch` to the `dev` branch
-    * make sure you're in `dev` using `$ git checkout -b dev`
+    * make sure you're in `dev` using `$ git checkout dev`
     * then merge using `$ git merge new-feature_bug-branch`
   * push your code to github
   * make a pull request on my repo's `dev` branch
