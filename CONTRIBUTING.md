@@ -5,15 +5,16 @@
 > On a Linux System (figure out how to do it on windows yourself):
 
 * you need the `telegram` app installed on your desktop/mobile, obviously!
-* then make sure you have `git`, `python(v3.7)` and `pipenv` installed on your system
+* then make sure you have `git` and `python(v3.6+)` installed on your system
 * create a Bot on Telegram to test on. [see how](https://core.telegram.org/bots#3-how-do-i-create-a-bot)
 * clone the repo `$ git clone https://github.com/ash753/tearobot/`
 * go to project folder `$ cd tearobot`
-* `$ pipenv install` install dependencies and create a virtualenv
+* `$ python -m venv venv` create a [virtualenv](https://virtualenv.pypa.io/en/latest/)
 * rename the `.env-sample` file to `.env` and provide your tokens inside it
-* `$ pipenv shell` launch the a virtual environment (this will source the .env variables into the virtual environment, so you don't have to export them yourself)
+* `$ source venv/bin/activate` activate the a virtual environment
+* `$ source .env` source the TOKENs to expose them
 * run `$ python tea.py`
-* see how it works
+* try using the test bot you created earlier
 
 ## Code
 
