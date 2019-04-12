@@ -58,8 +58,8 @@ class DBTest(unittest.TestCase):
             updated=1555086998,
             last_command='/start'
         )
-        self.assertTrue(isinstance(user[0], User), 'must create list of User objects populated by db values')
-        self.assertTrue(user[0].id, 123456789)
+        self.assertTrue(isinstance(user, User), 'must create a User object populated by db values')
+        self.assertTrue(user.id, 123456789)
         self.assertEqual(len(user), 1)
 
     def test_update_user(self):

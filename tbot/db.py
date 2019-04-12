@@ -15,17 +15,17 @@ class DBHelper():
             exit(err)
 
     def create(self):
-        """Create new record"""
+        """Create new record, and return it as Object of its type"""
         pass
 
     def retrieve(self):
-        """Retrieve a record based on provided parameters"""
+        """Retrieve a record/records based on provided parameters"""
         pass
 
     def update(self):
-        """Update a certain record based on a condition"""
+        """Update certain record(s) based on a condition"""
         pass
 
     def delete(self):
-        """Delete a certain record based on a condition"""
+        """Delete certain record(s) based on a condition"""
         pass
