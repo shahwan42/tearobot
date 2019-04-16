@@ -4,18 +4,17 @@
 import os
 import sqlite3
 
-# from pathlib import Path
 from sqlite3 import Error
-from types import User
+from data_types import User
+from . import BASE_DIR
 
-# TODO: absolute path for db
-# BASE_DIR = 
-# DB_FILE = BASE_DIR + '/db/ + bot.db
+DB_FILE = BASE_DIR / 'db' / 'bot.db'
+DB_SQL_SCRIPT = BASE_DIR / 'db' / 'bot.db.sql'
 
 
 class DBHelper():
 
-    def __init__(self, filename="../db/bot.db"):
+    def __init__(self, filename=DB_FILE):
         try:
             self.conn = sqlite3.connect(filename)  # new db connection
             self.cur = self.conn.cursor()  # obtain a cursor
@@ -30,7 +29,7 @@ class DBHelper():
     def setup(self) -> bool:
         """Set up database for dev/test purpose or for first time use"""
         try:
-            self.conn.executescript("../db/bot.db.sql")
+            self.conn.executescript(DB_SQL_SCRIPT)
             print("DB setup was successful")
         except Error as err:
             exit(err)
@@ -96,7 +95,7 @@ class DBHelper():
         """Get a user object using ``user_id``"""
         try:
             result = self.cur.execute("SELECT * FROM User WHERE id = ?", user_id)
-            user = User(result.fetchone())
+            user = User(*result.fetchone())
         except Error as err:
             self.conn.rollback()
             exit(err)
