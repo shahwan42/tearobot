@@ -4,20 +4,25 @@
 import os
 import sqlite3
 
+# from pathlib import Path
 from sqlite3 import Error
+
+# TODO: absolute path for db
+# BASE_DIR = 
 
 
 class DBHelper():
 
     def __init__(self, filename="../db/bot.db"):
         try:
-            self.conn = sqlite3.connect(filename)
-            self.cur = self.conn.cursor()
+            self.conn = sqlite3.connect(filename)  # new db connection
+            self.cur = self.conn.cursor()  # obtain a cursor
         except Error as err:
             exit(err)
 
     def __del__(self):
         """On object destruction"""
+        self.cur.close()
         self.conn.close()
 
     def setup(self) -> bool:
@@ -40,6 +45,59 @@ class DBHelper():
             print("removed db file")
         except Error as err:
             exit(err)
+
+    def query(self, sql: str, params: tuple):
+        """Executes a custom query"""
+        try:
+            self.cur.execute(sql, params)
+            self.conn.commit()
+        except Error as err:
+            self.conn.rollback()
+            exit(err)
+
+    def insert_message(self, params: tuple):
+        """Insert a new Message
+
+        ``params`` tuple: id, update_id, user_id, chat_id, date, text"""
+        sql = "INSERT INTO Message VALUES (?, ?, ?, ?, ?, ?)"
+        try:
+            self.cur.execute(sql, params)
+            self.conn.commit()
+        except Error as err:
+            self.conn.rollback()
+            exit(err)
+
+    def retrieve_message(self, user_id=None) -> list:
+        """Retrieve messages for a certain user"""
+        sql = "SELECT * FROM Message WHERE user_id = ?"
+        try:
+            result = self.cur.execute(sql, user_id)
+            rows = [row for row in result]
+        except Error as err:
+            exit(err)
+        return rows
+
+    def insert_user(self, params: tuple):
+        """Insert a new user
+
+        ``params`` tuple: id, is_bot, is_admin, first_name, last_name, username, language_code, active,
+        created, updated, last_command"""
+        sql = "INSERT INTO User VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+        try:
+            self.cur.execute(sql, params)
+            self.conn.commit()
+        except Error as err:
+            self.conn.rollback()
+            exit(err)
+
+    def retrieve_user(self):
+        pass
+
+    def update_user(self):
+        pass
+
+    def delete_user(self):
+        pass
 
     def insert(self, table: str, columns: tuple, values: tuple) -> bool:
         """Insert a new record into a table"""
@@ -93,3 +151,4 @@ if __name__ == "__main__":
     db = DBHelper(filename='../db/dev.db')
     # print(db.retrieve('Message', ('*'), 'user_id > 2'))
     # db.delete('Message', 'id = 1')
+    db.insert_message((1,2,3,4,5,'ahmed message'))
