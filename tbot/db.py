@@ -9,7 +9,7 @@ from sqlite3 import Error
 
 class DBHelper():
 
-    def __init__(self, filename='../db/bot.db'):
+    def __init__(self, filename="../db/bot.db"):
         try:
             self.conn = sqlite3.connect(filename)
             self.cur = self.conn.cursor()
@@ -20,23 +20,24 @@ class DBHelper():
         """On object destruction"""
         self.conn.close()
 
-    def setup(self):
+    def setup(self) -> bool:
         """Set up database for dev/test purpose or for first time use"""
         try:
-            self.conn.executescript('../db/bot.db.sql')
+            self.conn.executescript("../db/bot.db.sql")
+            print("DB setup was successful")
         except Error as err:
             exit(err)
-        return "DB setup was successful"
+        return True
 
     def destroy(self):
         try:
-            self.conn.execute('DROP TABLE User;')
-            self.conn.execute('DROP TABLE Message;')
+            self.conn.execute("DROP TABLE User;")
+            self.conn.execute("DROP TABLE Message;")
             self.conn.commit()
-            print('dropping tables... done.')
+            print("dropping tables... done.")
             self.conn.close()
-            os.remove(path='../db/dev.db')
-            print('removed db file')
+            os.remove(path="../db/dev.db")
+            print("removed db file")
         except Error as err:
             exit(err)
 
@@ -49,8 +50,8 @@ class DBHelper():
             self.cur.execute(query)
             self.conn.commit()
         except Error as err:
-            exit(err)
             self.conn.rollback()
+            exit(err)
         finally:
             print(f"inserted a new row in {table} in cols: {columns} with vals: {values}")
         return True
@@ -64,13 +65,25 @@ class DBHelper():
         print(f"retrieved these rows: {rows}")
         return rows
 
-    def update(self):
+    def update(self, table: str, columns: tuple, values: tuple, condition: str):
         """Update certain record(s) in a table"""
+        # query = "UPDATE {0} SET {1} WHERE {2}".format(table, columns, values)
         pass
 
-    def delete(self):
+    def delete(self, table: str, condition: str) -> bool:
         """Delete certain record(s) based on a condition"""
-        pass
+        query = "DELETE FROM {0} WHERE {1}".format(table, condition)
+        try:
+            to_delete = self.retrieve(table, ('*'), condition)
+            print(f"to delete: {to_delete}")
+            self.cur.execute(query)
+            self.conn.commit()
+        except Error as err:
+            self.conn.rollback()
+            exit(err)
+        finally:
+            print(f"Deleted the specified row(s) from {table} successfully")
+        return True
 
 
 if __name__ == "__main__":
@@ -78,4 +91,5 @@ if __name__ == "__main__":
     # User: id, is_bot, is_admin, first_name, last_name, username, language_code,
     # active, created, updated, last_command
     db = DBHelper(filename='../db/dev.db')
-    print(db.retrieve('Message', ('*'), 'user_id > 2'))
+    # print(db.retrieve('Message', ('*'), 'user_id > 2'))
+    # db.delete('Message', 'id = 1')
