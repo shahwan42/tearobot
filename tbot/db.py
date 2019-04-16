@@ -6,9 +6,11 @@ import sqlite3
 
 # from pathlib import Path
 from sqlite3 import Error
+from types import User
 
 # TODO: absolute path for db
 # BASE_DIR = 
+# DB_FILE = BASE_DIR + '/db/ + bot.db
 
 
 class DBHelper():
@@ -67,7 +69,7 @@ class DBHelper():
             self.conn.rollback()
             exit(err)
 
-    def retrieve_message(self, user_id=None) -> list:
+    def retrieve_messages(self, user_id=None) -> list:
         """Retrieve messages for a certain user"""
         sql = "SELECT * FROM Message WHERE user_id = ?"
         try:
@@ -80,8 +82,8 @@ class DBHelper():
     def insert_user(self, params: tuple):
         """Insert a new user
 
-        ``params`` tuple: id, is_bot, is_admin, first_name, last_name, username, language_code, active,
-        created, updated, last_command"""
+        ``params`` (id, is_bot, is_admin, first_name, last_name, username, language_code, active, created,
+        updated, last_command)"""
         sql = "INSERT INTO User VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
         try:
             self.cur.execute(sql, params)
@@ -90,65 +92,35 @@ class DBHelper():
             self.conn.rollback()
             exit(err)
 
-    def retrieve_user(self):
-        pass
-
-    def update_user(self):
-        pass
-
-    def delete_user(self):
-        pass
-
-    def insert(self, table: str, columns: tuple, values: tuple) -> bool:
-        """Insert a new record into a table"""
-        # cols: id, update_id, user_id, chat_id, date, text
-        query = "INSERT INTO {0} {1} VALUES {2};".format(table, columns, values)
-        print(f"db.insert query: {query}")
+    def retrieve_user(self, user_id: int) -> tuple:
+        """Get a user object using ``user_id``"""
         try:
-            self.cur.execute(query)
+            result = self.cur.execute("SELECT * FROM User WHERE id = ?", user_id)
+            user = User(result.fetchone())
+        except Error as err:
+            self.conn.rollback()
+            exit(err)
+        return user
+
+    def set_user_last_command(self, user_id: int, updated: int, last_command: str):
+        """Update user's last command"""
+        try:
+            sql = "UPDATE User SET updated = ?, last_command = ? WHERE user_id = ?"
+            self.cur.execute(sql, (updated, last_command, user_id))
             self.conn.commit()
         except Error as err:
             self.conn.rollback()
             exit(err)
-        finally:
-            print(f"inserted a new row in {table} in cols: {columns} with vals: {values}")
-        return True
 
-    def retrieve(self, table: str, columns: tuple, condition: str) -> list:
-        """Retrieve a record/records based on provided parameters"""
-        query = "SELECT {1} FROM {0} WHERE {2};".format(table, columns, condition)
-        print(f"db.retrieve query: {query}")
-        result = self.cur.execute(query)
-        rows = [row for row in result]
-        print(f"retrieved these rows: {rows}")
-        return rows
-
-    def update(self, table: str, columns: tuple, values: tuple, condition: str):
-        """Update certain record(s) in a table"""
-        # query = "UPDATE {0} SET {1} WHERE {2}".format(table, columns, values)
-        pass
-
-    def delete(self, table: str, condition: str) -> bool:
-        """Delete certain record(s) based on a condition"""
-        query = "DELETE FROM {0} WHERE {1}".format(table, condition)
+    def set_user_status(self, user_id: int, updated: int, active: bool):
+        """Activate/deactivate a user"""
+        status = 0
+        if active:
+            status = 1
         try:
-            to_delete = self.retrieve(table, ('*'), condition)
-            print(f"to delete: {to_delete}")
-            self.cur.execute(query)
+            sql = "UPDATE User SET updated = ?, active = ? WHERE user_id = ?"
+            self.cur.execute(sql, (updated, status, user_id))
             self.conn.commit()
         except Error as err:
             self.conn.rollback()
             exit(err)
-        finally:
-            print(f"Deleted the specified row(s) from {table} successfully")
-        return True
-
-
-if __name__ == "__main__":
-    # Message: id, update_id, user_id, chat_id, date, text
-    # User: id, is_bot, is_admin, first_name, last_name, username, language_code,
-    # active, created, updated, last_command
-    db = DBHelper(filename='../db/dev.db')
-    # print(db.retrieve('Message', ('*'), 'user_id > 2'))
-    # db.delete('Message', 'id = 1')
-    db.insert_message((1,2,3,4,5,'ahmed message'))
