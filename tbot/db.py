@@ -58,7 +58,8 @@ class DBHelper():
     def add_message(self, params: tuple) -> bool:
         """Insert a new Message
 
-        ``params`` tuple: id, update_id, user_id, chat_id, date, text"""
+        ``params`` tuple(``id``: int, ``update_id``: int, ``user_id``: int, ``chat_id``: int,
+        ``date``: int(unix_timestamp), ``text``: str"""
         sql = "INSERT INTO Message VALUES (?, ?, ?, ?, ?, ?)"
         try:
             self.cur.execute(sql, params)
@@ -81,8 +82,9 @@ class DBHelper():
     def add_user(self, params: tuple) -> bool:
         """Insert a new user
 
-        ``params`` (id, is_bot, is_admin, first_name, last_name, username, language_code, active, created,
-        updated, last_command)"""
+        ``params``: tuple(``id``: int, ``is_bot``: int, ``is_admin``: int, ``first_name``: str, ``last_name``: str,
+        ``username``: str, ``language_code``: str, ``active``: int(0|1), ``created``: int(unix_timestamp),
+        ``updated``: int(unix_timestamp), ``last_command``: str)"""
         sql = "INSERT INTO User VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
         try:
             self.cur.execute(sql, params)
@@ -94,15 +96,13 @@ class DBHelper():
 
     def get_user(self, user_id: int) -> tuple:
         """Get a user object using ``user_id``"""
+        sql = "SELECT * FROM User WHERE id = ?"
         try:
-            result = self.cur.execute("SELECT * FROM User WHERE id = ?", user_id)
+            result = self.cur.execute(sql, user_id)
             user = User(*result.fetchone())
         except Error as err:
             exit(err)
         return user
-
-    def get_user_last_command(self, user_id: int) -> str:
-        pass
 
     def set_user_last_command(self, user_id: int, updated: int, last_command: str):
         """Update user's last command"""
@@ -114,9 +114,6 @@ class DBHelper():
         except Error as err:
             self.conn.rollback()
             exit(err)
-
-    def get_user_status(self, user_id: int) -> int:
-        pass
 
     def set_user_status(self, user_id: int, updated: int, active: bool):
         """Activate/deactivate a user"""
