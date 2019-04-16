@@ -5,7 +5,7 @@ import os
 import sqlite3
 
 from sqlite3 import Error
-from data_types import User
+from .data_types import User
 from . import BASE_DIR
 
 DB_FILE = BASE_DIR / 'db' / 'bot.db'
@@ -23,7 +23,6 @@ class DBHelper():
 
     def __del__(self):
         """On object destruction"""
-        self.cur.close()
         self.conn.close()
 
     def setup(self) -> bool:
@@ -56,7 +55,7 @@ class DBHelper():
             self.conn.rollback()
             exit(err)
 
-    def insert_message(self, params: tuple):
+    def add_message(self, params: tuple) -> bool:
         """Insert a new Message
 
         ``params`` tuple: id, update_id, user_id, chat_id, date, text"""
@@ -64,11 +63,12 @@ class DBHelper():
         try:
             self.cur.execute(sql, params)
             self.conn.commit()
+            return True
         except Error as err:
             self.conn.rollback()
             exit(err)
 
-    def retrieve_messages(self, user_id=None) -> list:
+    def get_messages(self, user_id=None) -> list:
         """Retrieve messages for a certain user"""
         sql = "SELECT * FROM Message WHERE user_id = ?"
         try:
@@ -78,7 +78,7 @@ class DBHelper():
             exit(err)
         return rows
 
-    def insert_user(self, params: tuple):
+    def add_user(self, params: tuple) -> bool:
         """Insert a new user
 
         ``params`` (id, is_bot, is_admin, first_name, last_name, username, language_code, active, created,
@@ -87,19 +87,22 @@ class DBHelper():
         try:
             self.cur.execute(sql, params)
             self.conn.commit()
+            return True
         except Error as err:
             self.conn.rollback()
             exit(err)
 
-    def retrieve_user(self, user_id: int) -> tuple:
+    def get_user(self, user_id: int) -> tuple:
         """Get a user object using ``user_id``"""
         try:
             result = self.cur.execute("SELECT * FROM User WHERE id = ?", user_id)
             user = User(*result.fetchone())
         except Error as err:
-            self.conn.rollback()
             exit(err)
         return user
+
+    def get_user_last_command(self, user_id: int) -> str:
+        pass
 
     def set_user_last_command(self, user_id: int, updated: int, last_command: str):
         """Update user's last command"""
@@ -107,9 +110,13 @@ class DBHelper():
             sql = "UPDATE User SET updated = ?, last_command = ? WHERE user_id = ?"
             self.cur.execute(sql, (updated, last_command, user_id))
             self.conn.commit()
+            return True
         except Error as err:
             self.conn.rollback()
             exit(err)
+
+    def get_user_status(self, user_id: int) -> int:
+        pass
 
     def set_user_status(self, user_id: int, updated: int, active: bool):
         """Activate/deactivate a user"""
@@ -120,6 +127,7 @@ class DBHelper():
             sql = "UPDATE User SET updated = ?, active = ? WHERE user_id = ?"
             self.cur.execute(sql, (updated, status, user_id))
             self.conn.commit()
+            return True
         except Error as err:
             self.conn.rollback()
             exit(err)
