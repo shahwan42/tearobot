@@ -14,6 +14,8 @@
 * then `$ workon tearobot` to use that virtual environment and skip the following 2 steps
 * OR, if you haven't installed it, run `$ python -m venv venv` create a [virtualenv](https://virtualenv.pypa.io/en/latest/) to create a new virtual environment using the `venv` built-in module
 * then `$ source venv/bin/activate` to activate the virtual environment
+* install requirements `$ pip install -r requirements.txt`
+* install dev requirements `$pip install -r requirements-dev.txt`
 * after that issue: `$ cp .env-sample .env` to copy `.env-sample` file to `.env` in the same directory (we're still in the project folder)
 * edit the `.env` and provide your tokens inside it
 * `$ source .env` source the TOKENs to expose them inside the shell, so that our bot can see them
