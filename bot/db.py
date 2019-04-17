@@ -6,7 +6,7 @@ import sqlite3
 from pathlib import Path
 
 from sqlite3 import Error
-from .data_types import User
+from .data_types import User, Message
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 DB_DIR = os.path.join(BASE_DIR, "db")
@@ -68,6 +68,18 @@ class DBHelper():
             self.conn.rollback()
             exit(err)
 
+    def get_message(self, message_id: int) -> Message or bool:
+        """Retrieve message by its id"""
+        sql = "SELECT * FROM Message WHERE id = ?"
+        try:
+            self.cur.execute(sql, (message_id,))
+            rows = [row for row in self.cur.fetchall()]
+            if len(rows) > 0:
+                return Message(*rows[0])
+            return False
+        except Error as err:
+            exit(err)
+
     def get_messages(self, user_id=None) -> list:
         """Retrieve messages for a certain user"""
         sql = "SELECT * FROM Message WHERE user_id = ?"
@@ -93,15 +105,22 @@ class DBHelper():
             self.conn.rollback()
             exit(err)
 
-    def get_user(self, user_id: int) -> tuple:
+    def get_user(self, user_id: int) -> User:
         """Get a user object using ``user_id``"""
         sql = "SELECT * FROM User WHERE id = ?"
+        user = None
+        user_data = None
         try:
-            result = self.cur.execute(sql, user_id)
-            user = User(*result.fetchone())
+            result = self.cur.execute(sql, (user_id,))
+            user_data = result.fetchall()
+            print(user_data)
+            if len(user_data) > 0:
+                user = User(*user_data[0])
+            if user:
+                return user
+            return None
         except Error as err:
             exit(err)
-        return user
 
     def set_user_last_command(self, user_id: int, updated: int, last_command: str):
         """Update user's last command"""
