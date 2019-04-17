@@ -1,15 +1,14 @@
 """
     Database management module
 """
-import os
 import sqlite3
 
 from sqlite3 import Error
 from .data_types import User
 from . import BASE_DIR
 
-DB_FILE = BASE_DIR / 'db' / 'bot.db'
-DB_SQL_SCRIPT = BASE_DIR / 'db' / 'bot.db.sql'
+DB_FILE = BASE_DIR / "db" / "bot.db"
+DB_SQL_SCRIPT = BASE_DIR / "db" / "bot.db.sql"
 
 
 class DBHelper():
@@ -41,8 +40,8 @@ class DBHelper():
             self.conn.commit()
             print("dropping tables... done.")
             self.conn.close()
-            os.remove(path="../db/dev.db")
-            print("removed db file")
+            DB_FILE.unlink()
+            print("removing db file... done.")
         except Error as err:
             exit(err)
 
