@@ -120,3 +120,8 @@ dmypy.json
 # not to mistakenly add it in a commit
 config.py
 conf.yaml
+
+# db
+*.dev
+*.db
+
