@@ -54,7 +54,7 @@ def handle_updates(updates):
                         current_command = text  # set current command
                         if command_takes_arguments(current_command):  # if command operates on arg
                             hint_message = get_hint_message(current_command)  # get command hint message
-                            send_message(chat, hint_message)  # send a help message to recieve argument
+                            send_message(chat, hint_message)  # send a help message to receive argument
                         else:  # if command is available and does not operate on arg
                             # execute command directly
                             send_message(chat, get_command_handler(current_command)())
