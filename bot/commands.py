@@ -40,30 +40,16 @@ def calculate(expr):
     return "Error happened. Use a valid expression"
 
 
-def ocr_url(url, overlay=False, language='eng'):
+def ocr_url(url, overlay=False, language="eng"):
     """OCR from image using its ``url``"""
     api_key = os.environ.get("OCR_API")
     payload = {"url": url, "isOverlayRequired": overlay, "apikey": api_key, "language": language, }
     r = requests.post("https://api.ocr.space/parse/image", data=payload,)
     results = r.json()
-    # if "ParsedResults" in results:
-    #     if "ParsedText" in results["ParsedResults"][0]:
-    #         return results["ParsedResults"][0]["ParsedText"]
     try:
         return results["ParsedResults"][0]["ParsedText"]
     except Exception:
         return "Error. Please provide a valid URL"
-
-
-def ocr_file(filename, overlay=False, language="eng"):
-    """OCR from image file"""
-    # TODO: handle files inside ./utils.py and use it inside tea.py
-    api_key = os.environ.get("OCR_API")
-    payload = {"isOverlayRequired": overlay, "apikey": api_key, "language": language, }
-    with open(filename, "rb") as f:
-        r = requests.post("https://api.ocr.space/parse/image", files={filename: f}, data=payload,)
-    results = r.json()
-    return results["ParsedResults"][0]["ParsedText"]
 
 
 def translate(message):

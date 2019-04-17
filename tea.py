@@ -1,32 +1,17 @@
-# --------- libraries
+# --------- std/extra libraries
 import requests
 import time
-import sys
 import os
 import urllib
 
-# --------- project modules
-# --------- commands
-from tbot.commands import start_command
-from tbot.commands import help_command
-from tbot.commands import weather
-from tbot.commands import translate
-from tbot.commands import calculate
-from tbot.commands import tweet
-from tbot.commands import ocr_url
-# from tbot.commands import ocr_file
+# -------- project modules
+from bot.utils import is_available_command, command_takes_arguments, get_hint_message, get_command_handler
 
 bot_token = os.environ.get("BOT_TOKEN")
 if not bot_token:
-    sys.stderr.write("Provide your telegram bot token!")
-    sys.exit(1)
+    exit("Provide your telegram bot token!")
 # base url for our requests to the telegram APIs
 URL = f"https://api.telegram.org/bot{bot_token}/"
-
-
-def dict_from_url(url):
-    """return json response in form of python dictionary"""
-    return requests.get(url).json()  # return the result as a python dictionary
 
 
 def get_updates(offset=None):
@@ -35,7 +20,7 @@ def get_updates(offset=None):
     url = URL + f"getUpdates?timeout=120&allowed_updates={['messages']}"
     if offset:
         url += f"&offset={offset}"  # add offset if exists
-    return dict_from_url(url)  # return dict of latest updates
+    return requests.get(url).json()  # return dict of latest updates
 
 
 def send_message(chat_id, text):
@@ -51,51 +36,8 @@ def last_update_id(updates):
     return max(update_ids)  # the last update is the higher one
 
 
+# TODO: current_command = user.last_command
 current_command = None  # stores currently operating command
-
-
-def is_available_command(command):
-    """Checks if ``command`` is available in TBot commands"""
-    available_commands = ["/start", "/help", "/weather", "/translate", "/calculate", "/tweet", "/ocr_url"]
-    if command in available_commands:
-        return True
-    return False
-
-
-def command_takes_arguments(command):
-    """Checks if ``command`` operates on arguments or not"""
-    commands_with_argument = ["/translate", "/calculate", "/tweet", "/ocr_url"]
-    if command in commands_with_argument:
-        return True
-    return False
-
-
-def get_hint_message(command):
-    """Returns a hint message of ``command``"""
-    commands_hint = {
-        "/start": "",
-        "/help": "",
-        "/weather": "",
-        "/translate": "I will translate your next message from english to arabic",
-        "/calculate": "Write a mathematical expression to calculate",
-        "/tweet": "Let's tweet on TBot's twitter account!",
-        "/ocr_url":   "Send the URL of the image you want to extract text from"
-    }
-    return commands_hint.get(command)
-
-
-def get_command_handler(command):
-    """Returns a callable function according to ``command``"""
-    command_service = {
-        "/start": start_command,
-        "/help": help_command,
-        "/weather": weather,
-        "/translate": translate,
-        "/calculate": calculate,
-        "/tweet": tweet,
-        "/ocr_url": ocr_url
-    }
-    return command_service.get(command)
 
 
 def handle_updates(updates):
@@ -144,7 +86,7 @@ def main():
             time.sleep(0.5)
         except KeyboardInterrupt:  # exit on Ctrl-C
             print("\nquiting...")
-            sys.exit(0)
+            exit(0)
 
 
 if __name__ == "__main__":
