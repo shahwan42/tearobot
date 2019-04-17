@@ -36,7 +36,20 @@ def last_update_id(updates):
     return max(update_ids)  # the last update is the higher one
 
 
-# TODO: current_command = user.last_command
+# TODO:
+# extract user info from update
+# extract message info from update
+# store message in db
+# check user in db
+# # if exists:
+# get user's last command
+# current_command = user.last_command
+# reply to user's message based on his/her incoming message
+# update user's last_command according the incoming message
+# # if not:
+# add user to db
+# set current command
+# reply to users message based on its content
 current_command = None  # stores currently operating command
 
 
