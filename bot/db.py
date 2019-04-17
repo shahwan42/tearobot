@@ -113,7 +113,7 @@ class DBHelper():
         try:
             result = self.cur.execute(sql, (user_id,))
             user_data = result.fetchall()
-            print(user_data)
+            print("getting user..", user_data)
             if len(user_data) > 0:
                 user = User(*user_data[0])
             if user:
@@ -125,7 +125,7 @@ class DBHelper():
     def set_user_last_command(self, user_id: int, updated: int, last_command: str):
         """Update user's last command"""
         try:
-            sql = "UPDATE User SET updated = ?, last_command = ? WHERE user_id = ?"
+            sql = "UPDATE User SET updated = ?, last_command = ? WHERE id = ?"
             self.cur.execute(sql, (updated, last_command, user_id))
             self.conn.commit()
             return True
