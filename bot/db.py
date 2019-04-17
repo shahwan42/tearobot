@@ -1,33 +1,33 @@
 """
     Database management module
 """
+import os
 import sqlite3
+from pathlib import Path
 
 from sqlite3 import Error
 from .data_types import User
-from . import BASE_DIR
 
-DB_FILE = BASE_DIR / "db" / "bot.db"
-DB_SQL_SCRIPT = BASE_DIR / "db" / "bot.db.sql"
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+DB_DIR = os.path.join(BASE_DIR, "db")
+DB_SQL_SCRIPT = os.path.join(BASE_DIR, "db", "bot.db.sql")
 
 
 class DBHelper():
 
-    def __init__(self, filename=DB_FILE):
+    def __init__(self, filename="bot.db"):
         try:
-            self.conn = sqlite3.connect(filename)  # new db connection
+            self.db_file = str(os.path.join(DB_DIR, filename))
+            self.conn = sqlite3.connect(self.db_file)  # new db connection
             self.cur = self.conn.cursor()  # obtain a cursor
         except Error as err:
             exit(err)
 
-    def __del__(self):
-        """On object destruction"""
-        self.conn.close()
-
     def setup(self) -> bool:
         """Set up database for dev/test purpose or for first time use"""
         try:
-            self.conn.executescript(DB_SQL_SCRIPT)
+            self.conn.executescript(Path(DB_SQL_SCRIPT).read_text())
+            print("DB file path: " + self.db_file)
             print("DB setup was successful")
         except Error as err:
             exit(err)
@@ -40,7 +40,7 @@ class DBHelper():
             self.conn.commit()
             print("dropping tables... done.")
             self.conn.close()
-            DB_FILE.unlink()
+            os.remove(self.db_file)
             print("removing db file... done.")
         except Error as err:
             exit(err)

@@ -6,6 +6,7 @@ import urllib
 
 # -------- project modules
 from bot.utils import is_available_command, command_takes_arguments, get_hint_message, get_command_handler
+from bot.db import DBHelper
 
 bot_token = os.environ.get("BOT_TOKEN")
 if not bot_token:
@@ -56,7 +57,7 @@ current_command = None  # stores currently operating command
 def handle_updates(updates):
     """Handles incoming updates to the bot"""
     global current_command  # use current_command var from global scope
-    for update in updates["result"]:  # loop through updates
+    for update in updates:  # loop through updates
         text = None  # msg text
         chat = update["message"]["chat"]["id"]  # chat id
         if "text" in update["message"]:  # handle text messages only
@@ -95,7 +96,7 @@ def main():
             if "result" in updates:  # to prevent KeyError exception
                 if len(updates["result"]) > 0:  # make sure updates list is longer than 0
                     updates_offset = last_update_id(updates) + 1  # to remove handled updates
-                    handle_updates(updates)  # handle new (unhandled) updates
+                    handle_updates(updates["result"])  # handle new (unhandled) updates
             time.sleep(0.5)
         except KeyboardInterrupt:  # exit on Ctrl-C
             print("\nquiting...")
@@ -103,4 +104,8 @@ def main():
 
 
 if __name__ == "__main__":
+    # Setting DB
+    db = DBHelper()
+    db.setup()
+    print("Running bot...")
     main()
