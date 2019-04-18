@@ -50,11 +50,11 @@ def handle_updates(updates: list, db: DBHelper):
         # TODO: common message and user data from the same update
 
         # getting message data
-        msg_id = update["message"]["message_id"]  # message id
-        msg_update_id = update["update_id"]  # update id of this message
-        msg_user_id = update["message"]["from"]["id"]  # sending user
-        msg_chat_id = update["message"]["chat"]["id"]  # chat id of the message
-        msg_date = update["message"]["date"]  # message date
+        msg_id = update.get("message").get("message_id")  # message id
+        msg_update_id = update.get("update_id")  # update id of this message
+        msg_user_id = update.get("message").get("from").get("id")  # sending user
+        msg_chat_id = update.get("message").get("chat").get("id")  # chat id of the message
+        msg_date = update.get("message").get("date")  # message date
         msg_text = update.get("message").get("text", "")  # message text
 
         # Create Message object from incoming data
@@ -66,8 +66,8 @@ def handle_updates(updates: list, db: DBHelper):
         # db.add_user((id: int, is_bot: int, is_admin: int, first_name: str, last_name: str,
         # username: str, language_code: str, active: int(0|1), created: int(unix_timestamp),
         # updated: int(unix_timestamp), last_command: str))
-        user_id = update["message"]["from"]["id"]
-        user_is_bot = update["message"]["from"]["is_bot"]
+        user_id = update.get("message").get("from").get("id")
+        user_is_bot = update.get("message").get("from").get("is_bot")
         user_is_admin = 0
         user_first_name = update.get("message").get("from").get("first_name")
         user_last_name = update.get("message").get("from").get("last_name")
