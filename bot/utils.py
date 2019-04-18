@@ -12,10 +12,10 @@ def is_available_command(command):
     return False
 
 
-def command_takes_arguments(command):
-    """Checks if ``command`` operates on arguments or not"""
-    commands_with_argument = ["/translate", "/calculate", "/tweet", "/ocr_url"]
-    if command in commands_with_argument:
+def command_takes_input(command):
+    """Checks if ``command`` operates on inputs or not"""
+    takes_input = ["/translate", "/calculate", "/tweet", "/ocr_url"]
+    if command in takes_input:
         return True
     return False
 

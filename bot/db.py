@@ -133,13 +133,13 @@ class DBHelper():
             self.conn.rollback()
             exit(err)
 
-    def set_user_status(self, user_id: int, updated: int, active: bool):
+    def set_user_status(self, user_id: int, updated: int, active: int):
         """Activate/deactivate a user"""
         status = 0
         if active:
             status = 1
         try:
-            sql = "UPDATE User SET updated = ?, active = ? WHERE user_id = ?"
+            sql = "UPDATE User SET updated = ?, active = ? WHERE id = ?"
             self.cur.execute(sql, (updated, status, user_id))
             self.conn.commit()
             return True

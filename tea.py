@@ -5,7 +5,7 @@ import os
 import urllib
 
 # -------- project modules
-from bot.utils import is_available_command, command_takes_arguments, get_hint_message, get_command_handler
+from bot.utils import is_available_command, command_takes_input, get_hint_message, get_command_handler
 from bot.db import DBHelper
 from bot.data_types import Message
 
@@ -19,7 +19,7 @@ URL = f"https://api.telegram.org/bot{bot_token}/"
 def get_updates(offset=None):
     """Get updates after the offset"""
     # timeout will keep the pipe open and tell us when there"re new updates
-    url = URL + f"getUpdates?timeout=120&allowed_updates={['messages']}"
+    url = URL + 'getUpdates?timeout=120&allowed_updates=["messages"]'
     if offset:
         url += f"&offset={offset}"  # add offset if exists
     return requests.get(url).json()  # return dict of latest updates
@@ -49,12 +49,16 @@ def handle_updates(updates: list, db: DBHelper):
 
         # TODO: common message and user data from the same update
 
+        # Skip edited messages
+        if not update.get("message"):
+            continue
+
         # getting message data
-        msg_id = update["message"]["message_id"]  # message id
-        msg_update_id = update["update_id"]  # update id of this message
-        msg_user_id = update["message"]["from"]["id"]  # sending user
-        msg_chat_id = update["message"]["chat"]["id"]  # chat id of the message
-        msg_date = update["message"]["date"]  # message date
+        msg_id = update.get("message").get("message_id")  # message id
+        msg_update_id = update.get("update_id")  # update id of this message
+        msg_user_id = update.get("message").get("from").get("id")  # sending user
+        msg_chat_id = update.get("message").get("chat").get("id")  # chat id of the message
+        msg_date = update.get("message").get("date")  # message date
         msg_text = update.get("message").get("text", "")  # message text
 
         # Create Message object from incoming data
@@ -66,8 +70,8 @@ def handle_updates(updates: list, db: DBHelper):
         # db.add_user((id: int, is_bot: int, is_admin: int, first_name: str, last_name: str,
         # username: str, language_code: str, active: int(0|1), created: int(unix_timestamp),
         # updated: int(unix_timestamp), last_command: str))
-        user_id = update["message"]["from"]["id"]
-        user_is_bot = update["message"]["from"]["is_bot"]
+        user_id = update.get("message").get("from").get("id")
+        user_is_bot = update.get("message").get("from").get("is_bot")
         user_is_admin = 0
         user_first_name = update.get("message").get("from").get("first_name")
         user_last_name = update.get("message").get("from").get("last_name")
@@ -99,10 +103,10 @@ def handle_updates(updates: list, db: DBHelper):
                         current_command = text  # set current command
                         print("update user current command.. new cmd")
                         db.set_user_last_command(user.id, time.time(), current_command)  # update user's last command
-                        if command_takes_arguments(current_command):  # if command operates on arg
+                        if command_takes_input(current_command):  # if command operates on inputs
                             hint_message = get_hint_message(current_command)  # get command hint message
-                            send_message(chat, hint_message)  # send a help message to receive argument
-                        else:  # if command is available and does not operate on arg
+                            send_message(chat, hint_message)  # send a help message to receive inputs later
+                        else:  # if command is available and does not operate on inputs
                             # execute command directly
                             send_message(chat, get_command_handler(current_command)())
                             # then unset current_command, commands_without_args execute once!
