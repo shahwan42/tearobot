@@ -19,7 +19,7 @@ URL = f"https://api.telegram.org/bot{bot_token}/"
 def get_updates(offset=None):
     """Get updates after the offset"""
     # timeout will keep the pipe open and tell us when there"re new updates
-    url = URL + f"getUpdates?timeout=120&allowed_updates={['messages']}"
+    url = URL + 'getUpdates?timeout=120&allowed_updates=["messages"]'
     if offset:
         url += f"&offset={offset}"  # add offset if exists
     return requests.get(url).json()  # return dict of latest updates
@@ -48,6 +48,10 @@ def handle_updates(updates: list, db: DBHelper):
         # db.add_message((id: int, update_id: int, user_id: int, chat_id: int, date: int(unix_timestamp), text: str))
 
         # TODO: common message and user data from the same update
+
+        # Skip edited messages
+        if not update.get("message"):
+            continue
 
         # getting message data
         msg_id = update.get("message").get("message_id")  # message id
