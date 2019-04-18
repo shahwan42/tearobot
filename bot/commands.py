@@ -18,7 +18,9 @@ def help_command():
         "/translate - Translate message from english to arabic\n" \
         "/calculate - Calculate a mathematical expression\n" \
         "/tweet - Tweet on our Twitter account\n" \
-        "/ocr_url - Extract text from image\n"
+        "/ocr_url - Extract text from image\n"\
+        "/stop - Stop using bot\n" \
+        "/start - Start using bot"
 
 
 def start_command():
@@ -30,7 +32,9 @@ def start_command():
         "/translate - Translate message from English to Arabic\n" \
         "/calculate - Calculate a mathematical expression\n" \
         "/tweet - Tweet on our Twitter account\n" \
-        "/ocr_url - Extract text from image\n"
+        "/ocr_url - Extract text from image\n" \
+        "/stop - Stop using bot\n" \
+        "/start - Start using bot"
 
 
 def calculate(expr):
@@ -108,5 +112,9 @@ def weather():
     return f"Weather is {atm_status} in {location}.\nAnd it currently feels like {temperature} °C"
 
 
-def stop_command(db:DBHelper,user_id: int, updated: int, active: bool):
+def stop(db:DBHelper,user_id: int, updated: int, active: bool):
+    db.set_user_status(user_id,updated,active)
+
+
+def start(db:DBHelper,user_id: int, updated: int, active: bool):
     db.set_user_status(user_id,updated,active)
