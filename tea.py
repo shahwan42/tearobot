@@ -108,11 +108,16 @@ def handle_updates(updates: list, db: DBHelper):
                             send_message(chat, hint_message)  # send a help message to receive inputs later
                         else:  # if command is available and does not operate on inputs
                             # execute command directly
-                            send_message(chat, get_command_handler(current_command)())
-                            # then unset current_command, commands_without_args execute once!
-                            current_command = None
-                            print("update user current command.. one time cmd")
-                            db.set_user_last_command(user.id, time.time(), current_command)
+                            if current_command == "/stop":
+                                get_command_handler(current_command)(db, user_id, time.time(), False)
+                                current_command = None
+                            else:
+                                send_message(chat, get_command_handler(current_command)())
+                                # then unset current_command, commands_without_args execute once!
+                                current_command = None
+                                print("update user current command.. one time cmd")
+                                db.set_user_last_command(user.id, time.time(), current_command)
+
                     else:  # if command is not available
                         send_message(chat, "Use a defined command.")
                 else:  # if sent message does not start with a slash
