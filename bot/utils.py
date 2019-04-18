@@ -6,7 +6,7 @@ from .commands import start_command, help_command, weather, translate, calculate
 
 def is_available_command(command):
     """Checks if ``command`` is available in TBot commands"""
-    available_commands = ["/start", "/help", "/weather", "/translate", "/calculate", "/tweet", "/ocr_url"]
+    available_commands = ["/start", "/help", "/weather", "/translate", "/calculate", "/tweet", "/ocr_url", "/stop"]
     if command in available_commands:
         return True
     return False
