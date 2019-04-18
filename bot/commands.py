@@ -7,6 +7,7 @@ import sys
 import urllib
 import requests
 import tweepy
+from .db import DBHelper
 
 
 def help_command():
@@ -105,3 +106,7 @@ def weather():
     atm_status = data["IconPhrase"]
     location = "Zagazig, Egypt"
     return f"Weather is {atm_status} in {location}.\nAnd it currently feels like {temperature} °C"
+
+
+def stop_command(db:DBHelper,user_id: int, updated: int, active: bool):
+    db.set_user_status(user_id,updated,active)
