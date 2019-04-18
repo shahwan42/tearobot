@@ -5,7 +5,7 @@ import os
 import urllib
 
 # -------- project modules
-from bot.utils import is_available_command, command_takes_arguments, get_hint_message, get_command_handler
+from bot.utils import is_available_command, command_takes_input, get_hint_message, get_command_handler
 from bot.db import DBHelper
 from bot.data_types import Message
 
@@ -103,10 +103,10 @@ def handle_updates(updates: list, db: DBHelper):
                         current_command = text  # set current command
                         print("update user current command.. new cmd")
                         db.set_user_last_command(user.id, time.time(), current_command)  # update user's last command
-                        if command_takes_arguments(current_command):  # if command operates on arg
+                        if command_takes_input(current_command):  # if command operates on inputs
                             hint_message = get_hint_message(current_command)  # get command hint message
-                            send_message(chat, hint_message)  # send a help message to receive argument
-                        else:  # if command is available and does not operate on arg
+                            send_message(chat, hint_message)  # send a help message to receive inputs later
+                        else:  # if command is available and does not operate on inputs
                             # execute command directly
                             send_message(chat, get_command_handler(current_command)())
                             # then unset current_command, commands_without_args execute once!
