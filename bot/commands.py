@@ -23,7 +23,9 @@ def help_command():
         "/start - Start using bot"
 
 
-def start_command():
+def start_command(db:DBHelper, user_id: int, updated: int, active: bool):
+
+    db.set_user_status(user_id, updated, active)
     """Returns start command message"""
     return "Welcome to TBot.\n" \
         "Usage:\n" \
@@ -35,6 +37,7 @@ def start_command():
         "/ocr_url - Extract text from image\n" \
         "/stop - Stop using bot\n" \
         "/start - Start using bot"
+
 
 
 def calculate(expr):
@@ -112,9 +115,7 @@ def weather():
     return f"Weather is {atm_status} in {location}.\nAnd it currently feels like {temperature} °C"
 
 
-def stop(db:DBHelper,user_id: int, updated: int, active: bool):
-    db.set_user_status(user_id,updated,active)
+def stop(db: DBHelper, user_id: int, updated: int, active: bool):
+    db.set_user_status(user_id, updated, active)
 
 
-def start(db:DBHelper,user_id: int, updated: int, active: bool):
-    db.set_user_status(user_id,updated,active)

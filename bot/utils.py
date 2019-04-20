@@ -1,13 +1,12 @@
 """
     Helper functions to be used inside the project
 """
-from .commands import start_command, help_command, weather, translate, calculate, tweet, ocr_url, stop, start
+from .commands import start_command, help_command, weather, translate, calculate, tweet, ocr_url, stop
 
 
 def is_available_command(command):
     """Checks if ``command`` is available in TBot commands"""
-    available_commands = ["/start", "/help", "/weather", "/translate", "/calculate", "/tweet", "/ocr_url", "/stop",
-                          "/start"]
+    available_commands = ["/start", "/help", "/weather", "/translate", "/calculate", "/tweet", "/ocr_url", "/stop"]
 
     if command in available_commands:
         return True
@@ -31,8 +30,7 @@ def get_hint_message(command):
         "/calculate": "Write a mathematical expression to calculate",
         "/tweet": "Let's tweet on TBot's twitter account!",
         "/ocr_url":   "Send the URL of the image you want to extract text from",
-        "/stop": "Stop using bot",
-        "/start": "Start using bot"
+        "/stop": ""
 
     }
     return commands_hint.get(command)
@@ -48,8 +46,7 @@ def get_command_handler(command):
         "/calculate": calculate,
         "/tweet": tweet,
         "/ocr_url": ocr_url,
-        "/stop":stop,
-        "/start":start
+        "/stop": stop
     }
     return command_service.get(command)
 
