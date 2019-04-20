@@ -111,7 +111,7 @@ def handle_updates(updates: list, db: DBHelper):
                             if current_command == "/stop":
                                 get_command_handler(current_command)(db, user_id, time.time(), False)
                                 current_command = None
-                            if current_command == "/start":
+                            elif current_command == "/start":
                                 get_command_handler(current_command)(db, user_id, time.time(), True)
                                 current_command = None
                             else:
