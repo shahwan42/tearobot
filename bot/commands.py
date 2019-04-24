@@ -121,11 +121,11 @@ def weather():
 def schedule():
     """Returns events from schedule table"""
     db = DBHelper()
-    # print(db.get_data())
-    x = db.get_data()
-    x_list = [list(i) for i in x]
+    x = db.get_data() # x -> list of tuples 
+    x_list = [list(i) for i in x] # convert list of tuples to list of lists to deal with 
     y = ''
     for i in range(len(x_list)): 
+        #print the list of lists 
         y = str(y) + 'Date:  ' +str(x_list[i][1]) + '\n' +  'Importance:  ' +str(x_list[i][2]) + '\n' +str(x_list[i][0]) + '\n' + '---------------------------' + '\n'
     return str(y)
 

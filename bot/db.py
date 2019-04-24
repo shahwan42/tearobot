@@ -123,7 +123,7 @@ class DBHelper():
             exit(err)
 
     def get_data(self) -> list:
-        """Retrieve data from schedule"""
+        """Retrieve data and date from schedule"""
         sql = "SELECT data, date, importance FROM schedule"
         try:
             result = self.cur.execute(sql)
