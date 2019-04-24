@@ -8,6 +8,7 @@ import urllib
 import requests
 import tweepy
 from .db import DBHelper
+# from .utils import formating
 
 
 def help_command():
@@ -19,6 +20,7 @@ def help_command():
         "/calculate - Calculate a mathematical expression\n" \
         "/tweet - Tweet on our Twitter account\n" \
         "/ocr_url - Extract text from image\n"\
+        "/schedule - Show the college schedule and importnat events\n" \
         "/stop - Stop using bot\n" \
         "/start - Start using bot"
 
@@ -35,6 +37,7 @@ def start_command(db:DBHelper, user_id: int, updated: int, active: bool):
         "/calculate - Calculate a mathematical expression\n" \
         "/tweet - Tweet on our Twitter account\n" \
         "/ocr_url - Extract text from image\n" \
+        "/schedule - Show the college schedule and importnat events\n" \
         "/stop - Stop using bot\n" \
         "/start - Start using bot"
 
@@ -113,6 +116,21 @@ def weather():
     atm_status = data["IconPhrase"]
     location = "Zagazig, Egypt"
     return f"Weather is {atm_status} in {location}.\nAnd it currently feels like {temperature} °C"
+
+
+def schedule():
+    """Returns events from schedule table"""
+    db = DBHelper()
+    # print(db.get_data())
+    x = db.get_data()
+    x_list = [list(i) for i in x]
+    y = ''
+    for i in range(len(x_list)): 
+        y = str(y) + 'Date:  ' +str(x_list[i][1]) + '\n' +  'Importance:  ' +str(x_list[i][2]) + '\n' +str(x_list[i][0]) + '\n' + '---------------------------' + '\n'
+    return str(y)
+
+
+
 
 
 def stop(db: DBHelper, user_id: int, updated: int, active: bool):

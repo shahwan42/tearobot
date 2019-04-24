@@ -122,6 +122,16 @@ class DBHelper():
         except Error as err:
             exit(err)
 
+    def get_data(self) -> list:
+        """Retrieve data from schedule"""
+        sql = "SELECT data, date, importance FROM schedule"
+        try:
+            result = self.cur.execute(sql)
+            rows = [row for row in result]
+        except Error as err:
+            exit(err)
+        return rows
+
     def set_user_last_command(self, user_id: int, updated: int, last_command: str):
         """Update user's last command"""
         try:
@@ -146,3 +156,4 @@ class DBHelper():
         except Error as err:
             self.conn.rollback()
             exit(err)
+
