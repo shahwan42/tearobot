@@ -138,6 +138,16 @@ class DBHelper():
         except Error as err:
             exit(err)
 
+    def get_events(self) -> list:
+        """Retrieve description and time field from events"""
+        sql = "SELECT description, time FROM Events"
+        try:
+            result = self.cur.execute(sql)
+            rows = [row for row in result]
+        except Error as err:
+            exit(err)
+        return rows
+
     def set_user_last_command(self, user_id: int, updated: int, last_command: str):
         """Update user's last command"""
         try:
