@@ -1,3 +1,4 @@
+
 BEGIN TRANSACTION;
 CREATE TABLE IF NOT EXISTS "Message" (
 	"id"	INTEGER NOT NULL UNIQUE,
@@ -20,6 +21,12 @@ CREATE TABLE IF NOT EXISTS "User" (
 	"created"	INTEGER NOT NULL,
 	"updated"	INTEGER NOT NULL,
 	"last_command"	TEXT,
+	PRIMARY KEY("id")
+);
+CREATE TABLE IF NOT EXISTS "Events"(
+	"id"			INTEGER NOT NULL UNIQUE,
+	"description"	TEXT,
+	"time"			INTEGER,
 	PRIMARY KEY("id")
 );
 COMMIT;

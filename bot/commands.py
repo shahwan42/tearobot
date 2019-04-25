@@ -19,6 +19,7 @@ def help_command():
         "/calculate - Calculate a mathematical expression\n" \
         "/tweet - Tweet on our Twitter account\n" \
         "/ocr_url - Extract text from image\n"\
+        "/events - Show the upcoming events\n" \
         "/stop - Stop using bot\n" \
         "/start - Start using bot"
 
@@ -35,6 +36,7 @@ def start_command(db: DBHelper, user_id: int, updated: int, active: bool):
         "/calculate - Calculate a mathematical expression\n" \
         "/tweet - Tweet on our Twitter account\n" \
         "/ocr_url - Extract text from image\n" \
+        "/events - Show the upcoming events\n" \
         "/stop - Stop using bot\n" \
         "/start - Start using bot"
 
@@ -112,6 +114,22 @@ def weather():
     atm_status = data["IconPhrase"]
     location = "Zagazig, Egypt"
     return f"Weather is {atm_status} in {location}.\nAnd it currently feels like {temperature} °C"
+
+
+def events():
+    """Returns events from its table in db"""
+    db = DBHelper()
+    events_list = [list(i) for i in db.get_events()]  # get list of tuples and convert it to list of lists
+    result = ""
+    print("the content of the events list is " + str(events_list))
+    if len(events_list) > 0:
+        for i in range(len(events_list)):
+            # print the list of lists
+            result = str(result) + 'Date: ' + str(events_list[i][1]) + '\n' + \
+                str(events_list[i][0]) + '\n' + '---------------------------' + '\n'
+        return str(result)
+    else:
+        return "you don't have any events in the future! have fun!"
 
 
 def stop(db: DBHelper, user_id: int, updated: int, active: bool):
