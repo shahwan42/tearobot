@@ -41,3 +41,24 @@ class Message:
         self.chat_id = chat_id
         self.date = date
         self.text = text
+
+
+class Event:
+    """Event type"""
+    def __init__(self, id, time, description):
+        self.id = id
+        self.time = time
+        self.description = description
+
+
+class ScheduleEntry:
+    """Schedule Entry type"""
+    def __init__(self, id, time, saturday, sunday, monday, tuesday, wednesday, thursday):
+        self.id = id
+        self.time = time
+        self.saturday = saturday
+        self.sunday = sunday
+        self.monday = monday
+        self.tuesday = tuesday
+        self.wednesday = wednesday
+        self.thursday = thursday
