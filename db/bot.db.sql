@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS "User" (
 CREATE TABLE IF NOT EXISTS "Event" (
 	"id"			INTEGER NOT NULL UNIQUE,
 	"time"			INTEGER,
-	"description"	TEXT,
+	"description" 	TEXT,
 	PRIMARY KEY("id")
 );
 CREATE TABLE IF NOT EXISTS "Schedule" (
