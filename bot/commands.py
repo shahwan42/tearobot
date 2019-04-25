@@ -8,7 +8,7 @@ import urllib
 import requests
 import tweepy
 from .db import DBHelper
-# from .utils import formating
+
 
 
 def help_command():
