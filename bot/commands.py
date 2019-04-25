@@ -121,14 +121,16 @@ def weather():
 def events():
     """Returns events from its table in db"""
     db = DBHelper()
-    x = db.get_events() # x -> list of tuples 
-    x_list = [list(i) for i in x] # convert list of tuples to list of lists to deal with 
-    y = ''
-    print ("the content of the events list is " + str(x_list))
-    for i in range(len(x_list)): 
-        #print the list of lists 
-        y = str(y) + 'Date:  ' +str(x_list[i][1]) + '\n' +str(x_list[i][0]) + '\n' + '---------------------------' + '\n'
-    return str(y)
+    events_list = [list(i) for i in db.get_events()] # get list of tuples and convert it to list of lists
+    result = ''
+    print ("the content of the events list is " + str(events_list))
+    if len(events_list) > 0:    
+        for i in range(len(events_list)): 
+            #print the list of lists 
+            result = str(result) + 'Date:  ' +str(events_list[i][1]) + '\n' +str(events_list[i][0]) + '\n' + '---------------------------' + '\n'
+        return str(result)
+    else:
+        return "you don't have any event in the future! have fun with friends !!"
 
 
 

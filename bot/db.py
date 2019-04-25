@@ -123,8 +123,8 @@ class DBHelper():
             exit(err)
 
     def get_events(self) -> list:
-        """Retrieve description and date field from events"""
-        sql = "SELECT description, date FROM Events"
+        """Retrieve description and time field from events"""
+        sql = "SELECT description, time FROM Events"
         try:
             result = self.cur.execute(sql)
             rows = [row for row in result]

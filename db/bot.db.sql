@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS "User" (
 CREATE TABLE IF NOT EXISTS "Events"(
 	"id"			INTEGER NOT NULL UNIQUE,
 	"description"	TEXT,
-	"date"			DATE,
+	"time"			INTEGER,
 	PRIMARY KEY("id")
 );
 COMMIT;
