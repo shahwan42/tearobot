@@ -140,7 +140,7 @@ class DBHelper():
 
     def get_events(self) -> list:
         """Retrieve description and time field from events"""
-        sql = "SELECT description, time FROM Events"
+        sql = "SELECT description, time FROM Event"
         try:
             result = self.cur.execute(sql)
             rows = [row for row in result]
@@ -176,4 +176,14 @@ class DBHelper():
             return True
         except Error as err:
             self.conn.rollback()
+            exit(err)
+
+    def get_schedule(self) -> list:
+        """Fetch schedule data"""
+        try:
+            sql = "SELECT * FROM Schedule"
+            result = self.cur.execute(sql)
+            rows = [row for row in result]
+            return rows
+        except Error as err:
             exit(err)
