@@ -23,7 +23,7 @@ def help_command():
         "/start - Start using bot"
 
 
-def start_command(db:DBHelper, user_id: int, updated: int, active: bool):
+def start_command(db: DBHelper, user_id: int, updated: int, active: bool):
 
     db.set_user_status(user_id, updated, active)
     """Returns start command message"""
@@ -37,7 +37,6 @@ def start_command(db:DBHelper, user_id: int, updated: int, active: bool):
         "/ocr_url - Extract text from image\n" \
         "/stop - Stop using bot\n" \
         "/start - Start using bot"
-
 
 
 def calculate(expr):
@@ -117,5 +116,3 @@ def weather():
 
 def stop(db: DBHelper, user_id: int, updated: int, active: bool):
     db.set_user_status(user_id, updated, active)
-
-
