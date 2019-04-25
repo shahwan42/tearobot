@@ -122,9 +122,9 @@ class DBHelper():
         except Error as err:
             exit(err)
 
-    def get_data(self) -> list:
-        """Retrieve data and date from schedule"""
-        sql = "SELECT data, date, importance FROM schedule"
+    def get_events(self) -> list:
+        """Retrieve description and date field from events"""
+        sql = "SELECT description, date FROM Events"
         try:
             result = self.cur.execute(sql)
             rows = [row for row in result]

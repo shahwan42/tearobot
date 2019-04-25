@@ -23,11 +23,10 @@ CREATE TABLE IF NOT EXISTS "User" (
 	"last_command"	TEXT,
 	PRIMARY KEY("id")
 );
-CREATE TABLE IF NOT EXISTS "Schedule"(
+CREATE TABLE IF NOT EXISTS "Events"(
 	"id"			INTEGER NOT NULL UNIQUE,
-	"data"			TEXT,
+	"description"	TEXT,
 	"date"			DATE,
-	"importance"	TEXT,
 	PRIMARY KEY("id")
 );
 COMMIT;

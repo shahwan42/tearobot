@@ -20,7 +20,7 @@ def help_command():
         "/calculate - Calculate a mathematical expression\n" \
         "/tweet - Tweet on our Twitter account\n" \
         "/ocr_url - Extract text from image\n"\
-        "/schedule - Show the college schedule and importnat events\n" \
+        "/events - Show the upcoming events\n" \
         "/stop - Stop using bot\n" \
         "/start - Start using bot"
 
@@ -37,7 +37,7 @@ def start_command(db:DBHelper, user_id: int, updated: int, active: bool):
         "/calculate - Calculate a mathematical expression\n" \
         "/tweet - Tweet on our Twitter account\n" \
         "/ocr_url - Extract text from image\n" \
-        "/schedule - Show the college schedule and importnat events\n" \
+        "/events - Show the upcoming events\n" \
         "/stop - Stop using bot\n" \
         "/start - Start using bot"
 
@@ -118,15 +118,16 @@ def weather():
     return f"Weather is {atm_status} in {location}.\nAnd it currently feels like {temperature} °C"
 
 
-def schedule():
-    """Returns events from schedule table"""
+def events():
+    """Returns events from its table in db"""
     db = DBHelper()
-    x = db.get_data() # x -> list of tuples 
+    x = db.get_events() # x -> list of tuples 
     x_list = [list(i) for i in x] # convert list of tuples to list of lists to deal with 
     y = ''
+    print ("the content of the events list is " + str(x_list))
     for i in range(len(x_list)): 
         #print the list of lists 
-        y = str(y) + 'Date:  ' +str(x_list[i][1]) + '\n' +  'Importance:  ' +str(x_list[i][2]) + '\n' +str(x_list[i][0]) + '\n' + '---------------------------' + '\n'
+        y = str(y) + 'Date:  ' +str(x_list[i][1]) + '\n' +str(x_list[i][0]) + '\n' + '---------------------------' + '\n'
     return str(y)
 
 
