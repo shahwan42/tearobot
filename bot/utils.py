@@ -20,6 +20,7 @@ def command_takes_input(command):
         return True
     return False
 
+
 def get_hint_message(command):
     """Returns a hint message of ``command``"""
     commands_hint = {
@@ -49,4 +50,3 @@ def get_command_handler(command):
         "/stop": stop
     }
     return command_service.get(command)
-
