@@ -111,14 +111,14 @@ def handle_updates(updates: list, db: DBHelper):
                 if text.startswith("/"):  # if command
                     if is_available_command(text):  # if command is available
                         current_command = text  # set current command
-                        log.info('command: \"' + current_command + '\" is available.')
+                        log.info('command: "' + current_command + '" is available.')
                         db.set_user_last_command(user.id, time.time(), current_command)  # update user's last command
                         if command_takes_input(current_command):  # if command operates on inputs
                             hint_message = get_hint_message(current_command)  # get command hint message
                             send_message(chat, hint_message)  # send a help message to receive inputs later
                             log.info('sending hint message to user... done')
                         else:  # if command is available and does not operate on inputs
-                            log.info('command: \"' + current_command + '\" has no argument.')
+                            log.info('command: "' + current_command + '" has no argument.')
                             # execute command directly
                             if current_command == "/stop":
                                 get_command_handler(current_command)(db, user_id, time.time(), False)

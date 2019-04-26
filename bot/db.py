@@ -68,6 +68,23 @@ class DBHelper():
             self.conn.rollback()
             exit(err)
 
+    def get_message(self, message_id: int) -> Message or bool:
+        """Retrieve message by its id"""
+        sql = "SELECT * FROM Message WHERE id = ?"
+        try:
+            self.cur.execute(sql, (message_id,))
+            rows = [row for row in self.cur.fetchall()]
+            if len(rows) > 0:
+                msg = Message(*rows[0])
+                log.debug("Message Content: " + str(msg.text))
+                log.info("Message Retrieved with id: " + str(msg.id))
+                return msg
+            else:
+                log.info("No Message with id: " + str(message_id))
+                return False
+        except Error as err:
+            exit(err)
+
     def add_user(self, params: tuple) -> bool:
         """Insert a new user
 

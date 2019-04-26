@@ -40,10 +40,25 @@ class DBHelperTest(unittest.TestCase):
         self.assertEqual(msg.chat_id, got_msg.chat_id)
         self.assertEqual(msg.date, got_msg.date)
         self.assertEqual(msg.text, got_msg.text)
-        print("testing message insertion... done.")
+        print("testing add_message... done.")
 
-    def test_add_messages(self):
-        pass
+    def test_get_message(self):
+        # inserting the message
+        sql = "INSERT INTO Message VALUES (?, ?, ?, ?, ?, ?)"
+        params = (1, 2, 3, 4, 5, "message")
+        self.db.cur.execute(sql, params)
+        # making sure we get it right
+        msg = self.db.get_message(1)
+        self.assertTrue(isinstance(msg, Message))
+        self.assertEqual(msg.id, params[0])
+        self.assertEqual(msg.update_id, params[1])
+        self.assertEqual(msg.user_id, params[2])
+        self.assertEqual(msg.chat_id, params[3])
+        self.assertEqual(msg.date, params[4])
+        self.assertEqual(msg.text, params[5])
+        not_msg = self.db.get_message(2)
+        self.assertFalse(not_msg)
+        print("testing get_message... done.")
 
     def test_add_user(self):
         # TODO: use bare sql to test the returned result
