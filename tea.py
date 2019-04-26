@@ -88,17 +88,24 @@ def handle_updates(updates: list, db: DBHelper):
         user_created = time.time()
         user_updated = time.time()
         user_last_command = None
+        user_chat_id = update.get("message").get("chat").get("id")
         log.info("collecting user data... done")
         # if user doesn't exist, add him/her to db
         if not db.get_user(user_id):
             user = User(user_id, user_is_bot, user_is_admin, user_first_name, user_last_name, user_username,
-                        user_language_code, user_active, user_created, user_updated, user_last_command)
+                        user_language_code, user_active, user_created, user_updated, user_last_command, user_chat_id)
             db.add_user(user)
             log.info("New user saved.")
 
         log.info("Old user..")
         # Create user object from saved data
         user = db.get_user(user_id)
+        if not user.chat_id:
+            log.info("User does't have a chat_id yet!")
+            db.set_user_chat_id(user.id, time.time(), user_chat_id)
+            log.info("Updated user's chat_id")
+            # get user again after updating chat_id
+            user = db.get_user(user_id)
         log.info("creating user object from collected data... done")
 
         user_last_command = user.last_command
@@ -142,7 +149,7 @@ def handle_updates(updates: list, db: DBHelper):
                     last_command = user.last_command
                     if command_takes_input(last_command):  # should be an argument if current_command is set
                         log.info('received command arguments from user...')
-                        send_message(chat, get_command_handler(current_command)(text))
+                        send_message(chat, get_command_handler(last_command)(text))
                         log.info('sending message to user... done')
                     elif current_command == "/start" or current_command == "/stop":
                         continue  # skip

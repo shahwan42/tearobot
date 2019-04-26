@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS "User" (
 	"created"	INTEGER NOT NULL,
 	"updated"	INTEGER NOT NULL,
 	"last_command"	TEXT,
+	"chat_id"	INTEGER,
 	PRIMARY KEY("id")
 );
 CREATE TABLE IF NOT EXISTS "Event" (

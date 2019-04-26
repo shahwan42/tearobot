@@ -61,7 +61,7 @@ class DBHelperTest(unittest.TestCase):
     def test_add_user(self):
         # insert new user
         user = User(70437390, False, True, "Ahmed", "Shahwan", "ash753", "en", True, 1555512911.45624,
-                    1556303495.79887, "/calculate")
+                    1556303495.79887, "/calculate", 332324)
         self.assertTrue(self.db.add_user(user))
         # testing if it's inserted correctly
         sql = "SELECT * FROM User"
@@ -77,12 +77,13 @@ class DBHelperTest(unittest.TestCase):
         self.assertEqual(user.created, got_user.created)
         self.assertEqual(user.updated, got_user.updated)
         self.assertEqual(user.last_command, got_user.last_command)
+        self.assertEqual(user.chat_id, got_user.chat_id)
 
     def test_get_user(self):
         # inserting user to db using sql
-        sql = "INSERT INTO User VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+        sql = "INSERT INTO User VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
         params = (70437390, False, True, "Ahmed", "Shahwan", "ash753", "en", True, 1555512911.45624,
-                  1556303495.79887, "/calculate")
+                  1556303495.79887, "/calculate", 2345)
         self.db.cur.execute(sql, params)
         # user exists
         user = self.db.get_user(params[0])
@@ -98,6 +99,7 @@ class DBHelperTest(unittest.TestCase):
         self.assertEqual(user.created, params[8])
         self.assertEqual(user.updated, params[9])
         self.assertEqual(user.last_command, params[10])
+        self.assertEqual(user.chat_id, params[11])
         # user doesn't exist
         not_user = self.db.get_user(111)
         self.assertTrue(not_user is None)
@@ -105,10 +107,10 @@ class DBHelperTest(unittest.TestCase):
     def test_get_users(self):
         # add users using sql, then get them using the function
         # inserting users using sql
-        sql = "INSERT INTO User VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-        user1 = (7043739, False, False, "Ahme", "Shahwa", "ash75", "en", True, 155551291, 155630349, "/calculate")
-        user2 = (704373, False, True, "Ahm", "Shahw", "ash7", "en", False, 15555129, 15563034, "/translate")
-        user3 = (70437, False, False, "Ah", "Shah", "ash", "en", True, 1555512, 1556303, "/ocr_url")
+        sql = "INSERT INTO User VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+        user1 = (43739, False, False, "Ahme", "Shahwa", "ash75", "en", True, 51291, 30349, "/calculate", 33)
+        user2 = (4373, False, True, "Ahm", "Shahw", "ash7", "en", False, 5129, 3034, "/translate", 555)
+        user3 = (437, False, False, "Ah", "Shah", "ash", "en", True, 512, 303, "/ocr_url", 556)
         self.db.cur.execute(sql, user1)
         self.db.cur.execute(sql, user2)
         self.db.cur.execute(sql, user3)
@@ -122,7 +124,7 @@ class DBHelperTest(unittest.TestCase):
 
     def test_set_user_last_command(self):
         # create a user in db with tested functions
-        user = User(7043739, False, False, "Ahme", "Shahwa", "ash75", "en", True, 155551291, 155630349, "/calculate")
+        user = User(7043739, False, False, "Ahme", "Shahwa", "ash75", "en", True, 51291, 30349, "/calculate", 5554)
         self.db.add_user(user)
         # alter user's last command
         self.assertTrue(self.db.set_user_last_command(user.id, time.time(), "/translate"))
@@ -132,13 +134,24 @@ class DBHelperTest(unittest.TestCase):
 
     def test_set_user_status(self):
         # create a user
-        user = User(7043739, False, False, "Ahme", "Shahwa", "ash75", "en", True, 155551291, 155630349, "/calculate")
+        user = User(7043739, False, False, "Ahme", "Shahwa", "ash75", "en", True, 51291, 30349, "/calculate", 5556)
         self.db.add_user(user)
         # alter user's status
         self.assertTrue(self.db.set_user_status(user.id, time.time(), False))
         # test alteration success
         got_user = self.db.get_user(user.id)
         self.assertEqual(False, got_user.active)
+
+    def test_set_user_chat_id(self):
+        # create a user without caht_id
+        user = User(7043739, False, False, "Ahme", "Shahwa", "ash75", "en", True, 51291, 30349, "/calculate", None)
+        self.db.add_user(user)   
+        # alter user's chat_id
+        new_chat_id = 3456
+        self.db.set_user_chat_id(user.id, time.time(), new_chat_id)
+        # test alternation
+        got_user = self.db.get_user(user.id)
+        self.assertEqual(got_user.chat_id, new_chat_id)
 
     def test_get_schedule(self):
         pass

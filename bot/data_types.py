@@ -7,7 +7,7 @@
 class User:
     """User type"""
     def __init__(self, id: int, is_bot: bool, is_admin: bool, first_name: str, last_name: str, username: str,
-                 language_code: str, active: bool, created: int, updated: int, last_command: str):
+                 language_code: str, active: bool, created: int, updated: int, last_command: str, chat_id: int):
         self.id = id
         self.is_bot = bool(is_bot)
         self.is_admin = bool(is_admin)
@@ -19,12 +19,13 @@ class User:
         self.created = created
         self.updated = updated
         self.last_command = last_command
+        self.chat_id = chat_id
 
     def __str__(self):
         return f"[<User>: id: {self.id}, is_bot: {self.is_bot}, is_admin: {self.is_admin}, " \
                f"first_name: {self.first_name}, last_name: {self.last_name}, username: {self.username}, " \
                f"language_code: {self.language_code}, active: {self.active}, created: {self.created}, " \
-               f"updated: {self.updated}, last_command: {self.last_command}]"
+               f"updated: {self.updated}, last_command: {self.last_command}, chat_id: {self.chat_id}]"
 
 
 class Message:

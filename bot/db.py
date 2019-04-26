@@ -86,9 +86,9 @@ class DBHelper():
 
     def add_user(self, user: User) -> bool:
         """Insert a new user"""
-        sql = "INSERT INTO User VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+        sql = "INSERT INTO User VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
         params = (user.id, user.is_bot, user.is_admin, user.first_name, user.last_name, user.username,
-                  user.language_code, user.active, user.created, user.updated, user.last_command)
+                  user.language_code, user.active, user.created, user.updated, user.last_command, user.chat_id)
         try:
             self.cur.execute(sql, params)
             self.conn.commit()
@@ -118,7 +118,6 @@ class DBHelper():
 
     def get_users(self) -> list:
         """Return list of all Users"""
-        # TODO: return all users as objects in a list
         sql = "SELECT * FROM User"
         users_list = list()
         try:
@@ -153,6 +152,17 @@ class DBHelper():
                 log.info("User: " + str(user_id) + " is activated.")
             else:
                 log.info("User: " + str(user_id) + " is deactivated.")
+            return True
+        except Error as err:
+            self.conn.rollback()
+            exit(err)
+
+    def set_user_chat_id(self, user_id: int, updated: int, chat_id: int) -> bool:
+        """Set user's chat_id if not set (for old users)"""
+        sql = "UPDATE User SET updated = ?, chat_id = ? WHERE id = ?"
+        try:
+            self.cur.execute(sql, (updated, chat_id, user_id))
+            self.conn.commit()
             return True
         except Error as err:
             self.conn.rollback()
