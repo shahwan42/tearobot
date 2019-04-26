@@ -26,12 +26,41 @@ class DBHelperTest(unittest.TestCase):
 
     def test_add_message(self):
         self.assertTrue(self.db.add_message((1, 2, 3, 4, 5, "message 1")))
+        # TODO: get message using sql and test the returned
         print("testing message insertion... done.")
 
+    def test_add_messages(self):
+        pass
+
     def test_add_user(self):
-        self.assertTrue(self.db.add_user(
-            (1, 0, 0, "user", "", "username1", "en", 1, time.time(), time.time(), "/start")
-        ))
+        # TODO: use bare sql to test the returned result
+        pass
+
+    def test_add_users(self):
+        """Test adding multiple users to the database"""
+        pass
+
+    def test_get_user(self):
+        # TODO: first add the user using sql then get the user using the function
+        # get user using sql and test the returned
+        pass
+
+    def test_get_users(self):
+        # add users using sql, then get them using the function
+        pass
+
+    def test_set_user_last_command(self):
+        # use the function to set, then use sql to test
+        pass
+
+    def test_set_user_status(self):
+        pass
+
+    def test_get_schedule(self):
+        pass
+
+    def test_get_events(self):
+        pass
 
 
 class CommandsTest(unittest.TestCase):

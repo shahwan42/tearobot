@@ -6,7 +6,7 @@ import sqlite3
 from pathlib import Path
 
 from sqlite3 import Error
-from .data_types import User, Message
+from .data_types import User
 from loggingconfigs import config_logger
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
@@ -40,6 +40,8 @@ class DBHelper():
         try:
             self.conn.execute("DROP TABLE User;")
             self.conn.execute("DROP TABLE Message;")
+            self.conn.execute("DROP TABLE Event;")
+            self.conn.execute("DROP TABLE Schedule;")
             self.conn.commit()
             log.info("dropping tables... done.")
             self.conn.close()
@@ -48,21 +50,12 @@ class DBHelper():
         except Error as err:
             exit(err)
 
-    def query(self, sql: str, params: tuple):
-        """Executes a custom query"""
-        try:
-            self.cur.execute(sql, params)
-            self.conn.commit()
-            log("Query Executed.")
-        except Error as err:
-            self.conn.rollback()
-            exit(err)
-
     def add_message(self, params: tuple) -> bool:
         """Insert a new Message
 
         ``params`` tuple(``id``: int, ``update_id``: int, ``user_id``: int, ``chat_id``: int,
         ``date``: int(unix_timestamp), ``text``: str"""
+        # TODO: take a message object as param
         sql = "INSERT INTO Message VALUES (?, ?, ?, ?, ?, ?)"
         try:
             self.cur.execute(sql, params)
@@ -74,41 +67,13 @@ class DBHelper():
             self.conn.rollback()
             exit(err)
 
-    def get_message(self, message_id: int) -> Message or bool:
-        """Retrieve message by its id"""
-        sql = "SELECT * FROM Message WHERE id = ?"
-        try:
-            self.cur.execute(sql, (message_id,))
-            rows = [row for row in self.cur.fetchall()]
-            if len(rows) > 0:
-                msg = Message(*rows[0])
-                msg_content = (msg.id, msg.update_id, msg.user_id, msg.chat_id, msg.date, msg.text)
-                log.debug("Message Content: " + str(msg_content))
-                log.info("Message Retrieved with id: " + str(msg.id))
-                return msg
-            else:
-                log.info("No Message with id: " + str(message_id))
-                return False
-        except Error as err:
-            exit(err)
-
-    def get_messages(self, user_id=None) -> list:
-        """Retrieve messages for a certain user"""
-        sql = "SELECT * FROM Message WHERE user_id = ?"
-        try:
-            result = self.cur.execute(sql, user_id)
-            rows = [row for row in result]
-            log.info("Messages Retrieved from user: " + str(user_id))
-        except Error as err:
-            exit(err)
-        return rows
-
     def add_user(self, params: tuple) -> bool:
         """Insert a new user
 
         ``params``: tuple(``id``: int, ``is_bot``: int, ``is_admin``: int, ``first_name``: str, ``last_name``: str,
         ``username``: str, ``language_code``: str, ``active``: int(0|1), ``created``: int(unix_timestamp),
         ``updated``: int(unix_timestamp), ``last_command``: str)"""
+        # TODO: improve to take user object
         sql = "INSERT INTO User VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
         try:
             self.cur.execute(sql, params)
@@ -137,6 +102,11 @@ class DBHelper():
             return None
         except Error as err:
             exit(err)
+
+    def get_users(self) -> list:
+        """Return list of all Users"""
+        # TODO: return all users as objects in a list
+        pass
 
     def set_user_last_command(self, user_id: int, updated: int, last_command: str):
         """Update user's last command"""
