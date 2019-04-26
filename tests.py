@@ -5,7 +5,7 @@ from pathlib import Path
 
 from bot.commands import calculate, translate
 from bot.db import DBHelper
-from bot.data_types import Message, User
+from bot.data_types import Message, User, ScheduleEntry
 
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 DB_SQL_SCRIPT = os.path.join(BASE_DIR, "db", "bot.db.sql")
@@ -154,7 +154,25 @@ class DBHelperTest(unittest.TestCase):
         self.assertEqual(got_user.chat_id, new_chat_id)
 
     def test_get_schedule(self):
-        pass
+        # create schedule entries
+        sql = "INSERT INTO Schedule VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+        ent1 = (1, time.time(), "Organisation", None, None, None, "Labs", None)
+        ent2 = (2, time.time(), None, "Measurements", None, None, None, None)
+        ent3 = (3, time.time(), None, None, None, "Communication", "DSP", None)
+
+        self.db.cur.execute(sql, ent1)
+        self.db.cur.execute(sql, ent2)
+        self.db.cur.execute(sql, ent3)
+
+        # get entries
+        entries_list = self.db.get_schedule()
+
+        self.assertTrue(isinstance(entries_list, list))
+        self.assertTrue(len(entries_list) == 3)
+        self.assertTrue(isinstance(entries_list[0], ScheduleEntry))
+        self.assertTrue(isinstance(entries_list[1], ScheduleEntry))
+        self.assertTrue(isinstance(entries_list[2], ScheduleEntry))
+        print(entries_list[0], entries_list[1], entries_list[2])
 
     def test_get_events(self):
         pass

@@ -6,7 +6,7 @@ import sqlite3
 from pathlib import Path
 
 from sqlite3 import Error
-from .data_types import User, Message
+from .data_types import User, Message, ScheduleEntry
 from loggingconfigs import config_logger
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
@@ -170,12 +170,13 @@ class DBHelper():
 
     def get_schedule(self) -> list:
         """Fetch schedule data"""
-        # TODO: return list of ScheduleEntry
         sql = "SELECT * FROM Schedule"
+        schedule_entries = []
         try:
             result = self.cur.execute(sql)
-            rows = [row for row in result]
-            return rows
+            for entry in result.fetchall():
+                schedule_entries.append(ScheduleEntry(*entry))
+            return schedule_entries
         except Error as err:
             exit(err)
 
