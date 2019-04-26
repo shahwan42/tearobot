@@ -138,16 +138,6 @@ class DBHelper():
         except Error as err:
             exit(err)
 
-    def get_events(self) -> list:
-        """Retrieve description and time field from events"""
-        sql = "SELECT description, time FROM Event"
-        try:
-            result = self.cur.execute(sql)
-            rows = [row for row in result]
-        except Error as err:
-            exit(err)
-        return rows
-
     def set_user_last_command(self, user_id: int, updated: int, last_command: str):
         """Update user's last command"""
         try:
@@ -180,6 +170,7 @@ class DBHelper():
 
     def get_schedule(self) -> list:
         """Fetch schedule data"""
+        # TODO: return list of ScheduleEntry
         try:
             sql = "SELECT * FROM Schedule"
             result = self.cur.execute(sql)
@@ -187,3 +178,14 @@ class DBHelper():
             return rows
         except Error as err:
             exit(err)
+
+    def get_events(self) -> list:
+        """Retrieve description and time field from events"""
+        # TODO: return list of Event
+        sql = "SELECT description, time FROM Event"
+        try:
+            result = self.cur.execute(sql)
+            rows = [row for row in result]
+        except Error as err:
+            exit(err)
+        return rows

@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS "Event" (
 	"id"			INTEGER NOT NULL UNIQUE,
 	"time"			INTEGER,
 	"description" 	TEXT,
+	"cancelled"		INTEGER,
 	PRIMARY KEY("id")
 );
 CREATE TABLE IF NOT EXISTS "Schedule" (
