@@ -104,7 +104,21 @@ class DBHelperTest(unittest.TestCase):
 
     def test_get_users(self):
         # add users using sql, then get them using the function
-        pass
+        # inserting users using sql
+        sql = "INSERT INTO User VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+        user1 = (7043739, False, False, "Ahme", "Shahwa", "ash75", "en", True, 155551291, 155630349, "/calculate")
+        user2 = (704373, False, True, "Ahm", "Shahw", "ash7", "en", False, 15555129, 15563034, "/calculate")
+        user3 = (70437, False, False, "Ah", "Shah", "ash", "en", True, 1555512, 1556303, "/calculate")
+        self.db.cur.execute(sql, user1)
+        self.db.cur.execute(sql, user2)
+        self.db.cur.execute(sql, user3)
+
+        got_users = self.db.get_users()
+        self.assertTrue(isinstance(got_users, list))
+        self.assertTrue(len(got_users) == 3)
+        self.assertTrue(isinstance(got_users[0], User))
+        self.assertTrue(isinstance(got_users[1], User))
+        self.assertTrue(isinstance(got_users[2], User))
 
     def test_set_user_last_command(self):
         # use the function to set, then use sql to test

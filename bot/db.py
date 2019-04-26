@@ -56,8 +56,8 @@ class DBHelper():
         ``params`` tuple(``id``: int, ``update_id``: int, ``user_id``: int, ``chat_id``: int,
         ``date``: int(unix_timestamp), ``text``: str"""
         sql = "INSERT INTO Message VALUES (?, ?, ?, ?, ?, ?)"
+        params = (message.id, message.update_id, message.user_id, message.chat_id, message.date, message.text)
         try:
-            params = (message.id, message.update_id, message.user_id, message.chat_id, message.date, message.text)
             self.cur.execute(sql, params)
             self.conn.commit()
             log.debug("Message Content: " + message.text)
@@ -103,7 +103,6 @@ class DBHelper():
         """Get a user object using ``user_id``"""
         sql = "SELECT * FROM User WHERE id = ?"
         user = None
-        fetched_data = None
         try:
             result = self.cur.execute(sql, (user_id,))
             fetched_data = result.fetchone()
@@ -120,7 +119,14 @@ class DBHelper():
     def get_users(self) -> list:
         """Return list of all Users"""
         # TODO: return all users as objects in a list
-        pass
+        sql = "SELECT * FROM User"
+        users_list = list()
+        try:
+            for user in self.cur.execute(sql).fetchall():
+                users_list.append(User(*user))
+            return users_list
+        except Error as err:
+            exit(err)
 
     def set_user_last_command(self, user_id: int, updated: int, last_command: str):
         """Update user's last command"""
