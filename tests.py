@@ -107,8 +107,8 @@ class DBHelperTest(unittest.TestCase):
         # inserting users using sql
         sql = "INSERT INTO User VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
         user1 = (7043739, False, False, "Ahme", "Shahwa", "ash75", "en", True, 155551291, 155630349, "/calculate")
-        user2 = (704373, False, True, "Ahm", "Shahw", "ash7", "en", False, 15555129, 15563034, "/calculate")
-        user3 = (70437, False, False, "Ah", "Shah", "ash", "en", True, 1555512, 1556303, "/calculate")
+        user2 = (704373, False, True, "Ahm", "Shahw", "ash7", "en", False, 15555129, 15563034, "/translate")
+        user3 = (70437, False, False, "Ah", "Shah", "ash", "en", True, 1555512, 1556303, "/ocr_url")
         self.db.cur.execute(sql, user1)
         self.db.cur.execute(sql, user2)
         self.db.cur.execute(sql, user3)
@@ -121,11 +121,24 @@ class DBHelperTest(unittest.TestCase):
         self.assertTrue(isinstance(got_users[2], User))
 
     def test_set_user_last_command(self):
-        # use the function to set, then use sql to test
-        pass
+        # create a user in db with tested functions
+        user = User(7043739, False, False, "Ahme", "Shahwa", "ash75", "en", True, 155551291, 155630349, "/calculate")
+        self.db.add_user(user)
+        # alter user's last command
+        self.assertTrue(self.db.set_user_last_command(user.id, time.time(), "/translate"))
+        # test alteration success
+        got_user = self.db.get_user(user.id)
+        self.assertEqual("/translate", got_user.last_command)
 
     def test_set_user_status(self):
-        pass
+        # create a user
+        user = User(7043739, False, False, "Ahme", "Shahwa", "ash75", "en", True, 155551291, 155630349, "/calculate")
+        self.db.add_user(user)
+        # alter user's status
+        self.assertTrue(self.db.set_user_status(user.id, time.time(), False))
+        # test alteration success
+        got_user = self.db.get_user(user.id)
+        self.assertEqual(False, got_user.active)
 
     def test_get_schedule(self):
         pass

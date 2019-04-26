@@ -128,10 +128,10 @@ class DBHelper():
         except Error as err:
             exit(err)
 
-    def set_user_last_command(self, user_id: int, updated: int, last_command: str):
+    def set_user_last_command(self, user_id: int, updated: int, last_command: str) -> bool:
         """Update user's last command"""
+        sql = "UPDATE User SET updated = ?, last_command = ? WHERE id = ?"
         try:
-            sql = "UPDATE User SET updated = ?, last_command = ? WHERE id = ?"
             self.cur.execute(sql, (updated, last_command, user_id))
             self.conn.commit()
             log.info("last command updated for user ID: " + str(user_id) + " - current command: " + str(last_command))
@@ -140,13 +140,13 @@ class DBHelper():
             self.conn.rollback()
             exit(err)
 
-    def set_user_status(self, user_id: int, updated: int, active: int):
+    def set_user_status(self, user_id: int, updated: int, active: int) -> bool:
         """Activate/deactivate a user"""
         status = 0
         if active:
             status = 1
+        sql = "UPDATE User SET updated = ?, active = ? WHERE id = ?"
         try:
-            sql = "UPDATE User SET updated = ?, active = ? WHERE id = ?"
             self.cur.execute(sql, (updated, status, user_id))
             self.conn.commit()
             if status:
@@ -161,8 +161,8 @@ class DBHelper():
     def get_schedule(self) -> list:
         """Fetch schedule data"""
         # TODO: return list of ScheduleEntry
+        sql = "SELECT * FROM Schedule"
         try:
-            sql = "SELECT * FROM Schedule"
             result = self.cur.execute(sql)
             rows = [row for row in result]
             return rows
