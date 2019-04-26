@@ -1,13 +1,11 @@
 import unittest
 import time
 import os
-import sqlite3
-from sqlite3 import Error
 from pathlib import Path
 
 from bot.commands import calculate, translate
 from bot.db import DBHelper
-from bot.data_types import Message
+from bot.data_types import Message, User
 
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 DB_SQL_SCRIPT = os.path.join(BASE_DIR, "db", "bot.db.sql")
@@ -61,12 +59,24 @@ class DBHelperTest(unittest.TestCase):
         print("testing get_message... done.")
 
     def test_add_user(self):
-        # TODO: use bare sql to test the returned result
-        pass
-
-    def test_add_users(self):
-        """Test adding multiple users to the database"""
-        pass
+        # insert new user
+        user = User(70437390, False, True, "Ahmed", "Shahwan", "ash753", "en", True, 1555512911.45624,
+                    1556303495.79887, "/calculate")
+        self.assertTrue(self.db.add_user(user))
+        # testing if it's inserted correctly
+        sql = "SELECT * FROM User"
+        got_user = User(*self.db.cur.execute(sql).fetchone())
+        self.assertEqual(user.id, got_user.id)
+        self.assertEqual(user.is_bot, got_user.is_bot)
+        self.assertEqual(user.is_admin, got_user.is_admin)
+        self.assertEqual(user.first_name, got_user.first_name)
+        self.assertEqual(user.last_name, got_user.last_name)
+        self.assertEqual(user.username, got_user.username)
+        self.assertEqual(user.language_code, got_user.language_code)
+        self.assertEqual(user.active, got_user.active)
+        self.assertEqual(user.created, got_user.created)
+        self.assertEqual(user.updated, got_user.updated)
+        self.assertEqual(user.last_command, got_user.last_command)
 
     def test_get_user(self):
         # TODO: first add the user using sql then get the user using the function

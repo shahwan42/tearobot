@@ -50,25 +50,24 @@ class DBHelper():
         except Error as err:
             exit(err)
 
-    def add_message(self, msg: Message) -> bool:
+    def add_message(self, message: Message) -> bool:
         """Insert a new Message
 
         ``params`` tuple(``id``: int, ``update_id``: int, ``user_id``: int, ``chat_id``: int,
         ``date``: int(unix_timestamp), ``text``: str"""
-        # TODO: take a message object as param
         sql = "INSERT INTO Message VALUES (?, ?, ?, ?, ?, ?)"
         try:
-            params = (msg.id, msg.update_id, msg.user_id, msg.chat_id, msg.date, msg.text)
+            params = (message.id, message.update_id, message.user_id, message.chat_id, message.date, message.text)
             self.cur.execute(sql, params)
             self.conn.commit()
-            log.debug("Message Content: " + msg.text)
-            log.info("Message Added with id: " + str(msg.id))
+            log.debug("Message Content: " + message.text)
+            log.info("Message Added with id: " + str(message.id))
             return True
         except Error as err:
             self.conn.rollback()
             exit(err)
 
-    def get_message(self, message_id: int) -> Message or bool:
+    def get_message(self, message_id: int) -> Message:
         """Retrieve message by its id"""
         sql = "SELECT * FROM Message WHERE id = ?"
         try:
@@ -81,18 +80,15 @@ class DBHelper():
                 return msg
             else:
                 log.info("No Message with id: " + str(message_id))
-                return False
+                return None
         except Error as err:
             exit(err)
 
-    def add_user(self, params: tuple) -> bool:
-        """Insert a new user
-
-        ``params``: tuple(``id``: int, ``is_bot``: int, ``is_admin``: int, ``first_name``: str, ``last_name``: str,
-        ``username``: str, ``language_code``: str, ``active``: int(0|1), ``created``: int(unix_timestamp),
-        ``updated``: int(unix_timestamp), ``last_command``: str)"""
-        # TODO: improve to take user object
+    def add_user(self, user: User) -> bool:
+        """Insert a new user"""
         sql = "INSERT INTO User VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+        params = (user.id, user.is_bot, user.is_admin, user.first_name, user.last_name, user.username,
+                  user.language_code, user.active, user.created, user.updated, user.last_command)
         try:
             self.cur.execute(sql, params)
             self.conn.commit()
