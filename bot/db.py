@@ -6,7 +6,7 @@ import sqlite3
 from pathlib import Path
 
 from sqlite3 import Error
-from .data_types import User
+from .data_types import User, Message
 from loggingconfigs import config_logger
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
@@ -50,7 +50,7 @@ class DBHelper():
         except Error as err:
             exit(err)
 
-    def add_message(self, params: tuple) -> bool:
+    def add_message(self, msg: Message) -> bool:
         """Insert a new Message
 
         ``params`` tuple(``id``: int, ``update_id``: int, ``user_id``: int, ``chat_id``: int,
@@ -58,10 +58,11 @@ class DBHelper():
         # TODO: take a message object as param
         sql = "INSERT INTO Message VALUES (?, ?, ?, ?, ?, ?)"
         try:
+            params = (msg.id, msg.update_id, msg.user_id, msg.chat_id, msg.date, msg.text)
             self.cur.execute(sql, params)
             self.conn.commit()
-            log.debug("Message Content: " + str(params))
-            log.info("Message Added with id: " + str(params[0]))
+            log.debug("Message Content: " + msg.text)
+            log.info("Message Added with id: " + str(msg.id))
             return True
         except Error as err:
             self.conn.rollback()

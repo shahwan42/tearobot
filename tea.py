@@ -71,7 +71,7 @@ def handle_updates(updates: list, db: DBHelper):
         msg = Message(msg_id, msg_update_id, msg_user_id, msg_chat_id, msg_date, msg_text)
         log.info("creating message object from collected data... done")
         if not db.get_message(msg.id):  # if message doesn't exist already
-            db.add_message((msg.id, msg.update_id, msg.user_id, msg.chat_id, msg.date, msg.text))
+            db.add_message(msg)
             log.info("New message saved.")
 
         # db.add_user((id: int, is_bot: int, is_admin: int, first_name: str, last_name: str,
