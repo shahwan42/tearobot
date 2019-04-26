@@ -138,12 +138,13 @@ def handle_updates(updates: list, db: DBHelper):
                         send_message(chat, "Use a defined command.")
                 else:  # if sent message does not start with a slash
                     log.info("working on user's last command.. " + str(user.last_command))
-                    current_command = user.last_command
-                    if current_command:  # should be an argument if current_command is set
+                    last_command = user.last_command
+                    if command_takes_input(last_command):  # should be an argument if current_command is set
                         log.info('received command arguments from user...')
-                        current_command_service = get_command_handler(current_command)  # get se
-                        send_message(chat, current_command_service(text))
+                        send_message(chat, get_command_handler(current_command)(text))
                         log.info('sending message to user... done')
+                    elif current_command == "/start" or current_command == "/stop":
+                        continue  # skip
                     else:
                         log.info('Undefined Command.')
                         send_message(chat, "Use a defined command.")
