@@ -79,9 +79,28 @@ class DBHelperTest(unittest.TestCase):
         self.assertEqual(user.last_command, got_user.last_command)
 
     def test_get_user(self):
-        # TODO: first add the user using sql then get the user using the function
-        # get user using sql and test the returned
-        pass
+        # inserting user to db using sql
+        sql = "INSERT INTO User VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+        params = (70437390, False, True, "Ahmed", "Shahwan", "ash753", "en", True, 1555512911.45624,
+                  1556303495.79887, "/calculate")
+        self.db.cur.execute(sql, params)
+        # user exists
+        user = self.db.get_user(params[0])
+        self.assertTrue(isinstance(user, User))
+        self.assertEqual(user.id, params[0])
+        self.assertEqual(user.is_bot, params[1])
+        self.assertEqual(user.is_admin, params[2])
+        self.assertEqual(user.first_name, params[3])
+        self.assertEqual(user.last_name, params[4])
+        self.assertEqual(user.username, params[5])
+        self.assertEqual(user.language_code, params[6])
+        self.assertEqual(user.active, params[7])
+        self.assertEqual(user.created, params[8])
+        self.assertEqual(user.updated, params[9])
+        self.assertEqual(user.last_command, params[10])
+        # user doesn't exist
+        not_user = self.db.get_user(111)
+        self.assertTrue(not_user is None)
 
     def test_get_users(self):
         # add users using sql, then get them using the function

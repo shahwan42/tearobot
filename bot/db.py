@@ -103,14 +103,14 @@ class DBHelper():
         """Get a user object using ``user_id``"""
         sql = "SELECT * FROM User WHERE id = ?"
         user = None
-        user_data = None
+        fetched_data = None
         try:
             result = self.cur.execute(sql, (user_id,))
-            user_data = result.fetchall()
+            fetched_data = result.fetchone()
             log.info("getting user with id: " + str(user_id))
-            log.debug("User data: " + str(user_data))
-            if len(user_data) > 0:
-                user = User(*user_data[0])
+            log.debug("User data: " + str(fetched_data))
+            if isinstance(fetched_data, tuple):
+                user = User(*fetched_data)
             if user:
                 return user
             return None
