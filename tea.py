@@ -175,6 +175,15 @@ def main(db: DBHelper):
                 else:
                     log.info('no updates to be handled')
             time.sleep(0.5)
+
+            # if it's 8 in the morning
+            #   # What is today?
+            #   # get schedule of today
+            #   # get list of all users
+            #   # for user in all_users
+            #   #   # send today's schedule
+            #   #   # sleep for .5 second
+
         except KeyboardInterrupt:  # exit on Ctrl-C
             log.info("\nquiting...")
             exit(0)
