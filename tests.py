@@ -187,7 +187,21 @@ class DBHelperTest(unittest.TestCase):
         self.assertEqual(ann.cancelled, got_ann[3])
 
     def test_get_announcements(self):
-        pass
+        # add some announcements
+        ann1 = Announcement(1, time.time(), "DSP Assignment 10 should be delivered tomorrow", False)
+        ann2 = Announcement(2, time.time(), "Communication Lecture is cancelled", False)
+        ann3 = Announcement(3, time.time(), "Dr Tamer is not coming again", False)
+
+        self.db.add_announcement(ann1)
+        self.db.add_announcement(ann2)
+        self.db.add_announcement(ann3)
+
+        # get what've been added and test it
+        anns = self.db.get_announcements()
+        self.assertTrue(isinstance(anns, list))
+        self.assertTrue(isinstance(anns[0], Announcement))
+        self.assertTrue(isinstance(anns[1], Announcement))
+        self.assertTrue(isinstance(anns[2], Announcement))
 
 
 class CommandsTest(unittest.TestCase):

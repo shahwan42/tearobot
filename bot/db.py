@@ -187,15 +187,17 @@ class DBHelper():
             self.cur.execute(sql, (ann.id, ann.time, ann.description, ann.cancelled))
             return True
         except Error as err:
+            self.conn.rollback()
             exit(err)
 
     def get_announcements(self) -> list:
         """Retrieve description and time field from Announcement"""
-        # TODO: return list of Announcement
-        sql = "SELECT description, time FROM Announcement"
+        sql = "SELECT * FROM Announcement"
+        ann_list = list()
         try:
             result = self.cur.execute(sql)
-            rows = [row for row in result]
+            for ann in result.fetchall():
+                ann_list.append(Announcement(*ann))
+            return ann_list
         except Error as err:
             exit(err)
-        return rows
