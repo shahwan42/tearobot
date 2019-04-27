@@ -5,7 +5,7 @@ from pathlib import Path
 
 from bot.commands import calculate, translate
 from bot.db import DBHelper
-from bot.data_types import Message, User, ScheduleEntry
+from bot.data_types import Message, User, ScheduleEntry, Announcement
 
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 DB_SQL_SCRIPT = os.path.join(BASE_DIR, "db", "bot.db.sql")
@@ -174,7 +174,19 @@ class DBHelperTest(unittest.TestCase):
         self.assertTrue(isinstance(entries_list[2], ScheduleEntry))
         print(entries_list[0], entries_list[1], entries_list[2])
 
-    def test_get_events(self):
+    def test_add_announcement(self):
+        # add announcement
+        ann = Announcement(1, time.time(), "DSP Assignment 10 should be delivered tomorrow", False)
+        self.assertTrue(self.db.add_announcement(ann))
+        # get announcement to test
+        sql = "SELECT * FROM Announcement"
+        got_ann = self.db.cur.execute(sql).fetchone()
+        self.assertEqual(ann.id, got_ann[0])
+        self.assertEqual(ann.time, got_ann[1])
+        self.assertEqual(ann.description, got_ann[2])
+        self.assertEqual(ann.cancelled, got_ann[3])
+
+    def test_get_announcements(self):
         pass
 
 

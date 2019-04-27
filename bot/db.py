@@ -6,7 +6,7 @@ import sqlite3
 from pathlib import Path
 
 from sqlite3 import Error
-from .data_types import User, Message, ScheduleEntry
+from .data_types import User, Message, ScheduleEntry, Announcement
 from loggingconfigs import config_logger
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
@@ -40,7 +40,7 @@ class DBHelper():
         try:
             self.conn.execute("DROP TABLE User;")
             self.conn.execute("DROP TABLE Message;")
-            self.conn.execute("DROP TABLE Event;")
+            self.conn.execute("DROP TABLE Announcement;")
             self.conn.execute("DROP TABLE Schedule;")
             self.conn.commit()
             log.info("dropping tables... done.")
@@ -180,10 +180,19 @@ class DBHelper():
         except Error as err:
             exit(err)
 
-    def get_events(self) -> list:
-        """Retrieve description and time field from events"""
-        # TODO: return list of Event
-        sql = "SELECT description, time FROM Event"
+    def add_announcement(self, ann: Announcement) -> bool:
+        """Create new Announcement"""
+        sql = "INSERT INTO Announcement VALUES (?, ?, ?, ?)"
+        try:
+            self.cur.execute(sql, (ann.id, ann.time, ann.description, ann.cancelled))
+            return True
+        except Error as err:
+            exit(err)
+
+    def get_announcements(self) -> list:
+        """Retrieve description and time field from Announcement"""
+        # TODO: return list of Announcement
+        sql = "SELECT description, time FROM Announcement"
         try:
             result = self.cur.execute(sql)
             rows = [row for row in result]

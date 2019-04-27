@@ -43,7 +43,7 @@ class Message:
                f"chat_id: {self.chat_id}, date: {self.date}, text: {self.text}]"
 
 
-class Event:
+class Announcement:
     """Event type"""
     def __init__(self, id: int, time: int, description: str, cancelled: bool):
         self.id = id

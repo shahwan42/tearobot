@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS "User" (
 	"chat_id"	INTEGER,
 	PRIMARY KEY("id")
 );
-CREATE TABLE IF NOT EXISTS "Event" (
+CREATE TABLE IF NOT EXISTS "Announcement" (
 	"id"			INTEGER NOT NULL UNIQUE,
 	"time"			INTEGER,
 	"description" 	TEXT,
