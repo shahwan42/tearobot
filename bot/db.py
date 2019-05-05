@@ -182,9 +182,9 @@ class DBHelper():
 
     def add_announcement(self, ann: Announcement) -> bool:
         """Create new Announcement"""
-        sql = "INSERT INTO Announcement VALUES (?, ?, ?, ?)"
+        sql = "INSERT INTO Announcement (time, description, cancelled) VALUES (?, ?, ?)"
         try:
-            self.cur.execute(sql, (ann.id, ann.time, ann.description, ann.cancelled))
+            self.cur.execute(sql, (ann.time, ann.description, ann.cancelled))
             return True
         except Error as err:
             self.conn.rollback()
@@ -197,7 +197,8 @@ class DBHelper():
         try:
             result = self.cur.execute(sql)
             for ann in result.fetchall():
-                ann_list.append(Announcement(*ann))
+                ann_obj = Announcement(ann[1], ann[2], ann[3], ann[0])
+                ann_list.append(ann_obj)
             return ann_list
         except Error as err:
             exit(err)

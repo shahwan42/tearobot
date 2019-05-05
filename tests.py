@@ -176,21 +176,34 @@ class DBHelperTest(unittest.TestCase):
 
     def test_add_announcement(self):
         # add announcement
-        ann = Announcement(1, time.time(), "DSP Assignment 10 should be delivered tomorrow", False)
+        ann = Announcement(time.time(), "DSP Assignment 10 should be delivered tomorrow", False)
+        time.sleep(0.5)
+        ann1 = Announcement(time.time(), "Another test announcement", False)
         self.assertTrue(self.db.add_announcement(ann))
+        self.assertTrue(self.db.add_announcement(ann1))
+
         # get announcement to test
         sql = "SELECT * FROM Announcement"
-        got_ann = self.db.cur.execute(sql).fetchone()
-        self.assertEqual(ann.id, got_ann[0])
+        result = self.db.cur.execute(sql)
+        got_ann = result.fetchone()
+        got_ann1 = result.fetchone()
+
+        self.assertEqual(1, got_ann[0])
         self.assertEqual(ann.time, got_ann[1])
         self.assertEqual(ann.description, got_ann[2])
         self.assertEqual(ann.cancelled, got_ann[3])
 
+        self.assertEqual(2, got_ann1[0])
+        self.assertEqual(ann1.time, got_ann1[1])
+        self.assertEqual(ann1.description, got_ann1[2])
+        self.assertEqual(ann1.cancelled, got_ann1[3])
+
+
     def test_get_announcements(self):
         # add some announcements
-        ann1 = Announcement(1, time.time(), "DSP Assignment 10 should be delivered tomorrow", False)
-        ann2 = Announcement(2, time.time(), "Communication Lecture is cancelled", False)
-        ann3 = Announcement(3, time.time(), "Dr Tamer is not coming again", False)
+        ann1 = Announcement(time.time(), "DSP Assignment 10 should be delivered tomorrow", False)
+        ann2 = Announcement(time.time(), "Communication Lecture is cancelled", False)
+        ann3 = Announcement(time.time(), "Dr Tamer is not coming again", False)
 
         self.db.add_announcement(ann1)
         self.db.add_announcement(ann2)
