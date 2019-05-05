@@ -24,21 +24,19 @@ CREATE TABLE IF NOT EXISTS "User" (
 	PRIMARY KEY("id")
 );
 CREATE TABLE IF NOT EXISTS "Announcement" (
-	"id"			INTEGER NOT NULL UNIQUE,
+	"id"			INTEGER PRIMARY KEY AUTOINCREMENT,
 	"time"			INTEGER,
 	"description" 	TEXT,
-	"cancelled"		INTEGER,
-	PRIMARY KEY("id")
+	"cancelled"		INTEGER
 );
 CREATE TABLE IF NOT EXISTS "Schedule" (
-	"id"	INTEGER NOT NULL UNIQUE,
+	"id"	INTEGER PRIMARY KEY AUTOINCREMENT,
 	"time"	INTEGER NOT NULL,
 	"saturday"	TEXT,
 	"sunday"	TEXT,
 	"monday"	TEXT,
 	"tuesday"	TEXT,
 	"wednesday"	TEXT,
-	"thursday"	TEXT,
-	PRIMARY KEY("id")
+	"thursday"	TEXT
 );
 COMMIT;
