@@ -175,7 +175,8 @@ class DBHelper():
         try:
             result = self.cur.execute(sql)
             for entry in result.fetchall():
-                schedule_entries.append(ScheduleEntry(*entry))
+                schedule_entries.append(
+                    ScheduleEntry(entry[1], entry[2], entry[3], entry[4], entry[5], entry[6], entry[7], entry[0]))
             return schedule_entries
         except Error as err:
             exit(err)

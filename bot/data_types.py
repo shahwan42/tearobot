@@ -60,6 +60,7 @@ class ScheduleEntry:
     """Schedule Entry type"""
     def __init__(self, time: int, saturday: str, sunday: str, monday: str, tuesday: str,
                  wednesday: str, thursday: str, id: int = None):
+        self.id = id
         self.time = time
         self.saturday = saturday
         self.sunday = sunday
@@ -67,7 +68,6 @@ class ScheduleEntry:
         self.tuesday = tuesday
         self.wednesday = wednesday
         self.thursday = thursday
-        self.id = id
 
     def __str__(self):
         return f"[<ScheduleEntry>: id: {self.id}, time: {self.time}, saturday: {self.saturday}, "\

@@ -155,10 +155,11 @@ class DBHelperTest(unittest.TestCase):
 
     def test_get_schedule(self):
         # create schedule entries
-        sql = "INSERT INTO Schedule VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
-        ent1 = (1, time.time(), "Organisation", None, None, None, "Labs", None)
-        ent2 = (2, time.time(), None, "Measurements", None, None, None, None)
-        ent3 = (3, time.time(), None, None, None, "Communication", "DSP", None)
+        sql = "INSERT INTO Schedule (time, saturday, sunday, monday, tuesday, wednesday, thursday) "\
+              "VALUES (?, ?, ?, ?, ?, ?, ?)"
+        ent1 = (time.time(), "Organisation", None, None, None, None, None)
+        ent2 = (time.time(), None, "Measurements", None, None, None, None)
+        ent3 = (time.time(), None, None, None, "Communication", None, None)
 
         self.db.cur.execute(sql, ent1)
         self.db.cur.execute(sql, ent2)
@@ -170,8 +171,11 @@ class DBHelperTest(unittest.TestCase):
         self.assertTrue(isinstance(entries_list, list))
         self.assertTrue(len(entries_list) == 3)
         self.assertTrue(isinstance(entries_list[0], ScheduleEntry))
+        self.assertTrue(entries_list[0].id, 1)
         self.assertTrue(isinstance(entries_list[1], ScheduleEntry))
+        self.assertTrue(entries_list[1].id, 2)
         self.assertTrue(isinstance(entries_list[2], ScheduleEntry))
+        self.assertTrue(entries_list[2].id, 3)
         print(entries_list[0], entries_list[1], entries_list[2])
 
     def test_add_announcement(self):
@@ -197,7 +201,6 @@ class DBHelperTest(unittest.TestCase):
         self.assertEqual(ann1.time, got_ann1[1])
         self.assertEqual(ann1.description, got_ann1[2])
         self.assertEqual(ann1.cancelled, got_ann1[3])
-
 
     def test_get_announcements(self):
         # add some announcements
