@@ -126,3 +126,4 @@ conf.yaml
 *.db
 
 bot.db.bk*
+bot.db.server

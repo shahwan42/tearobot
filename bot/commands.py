@@ -25,9 +25,8 @@ def help_command():
 
 
 def start_command(db: DBHelper, user_id: int, updated: int, active: bool):
-
-    db.set_user_status(user_id, updated, active)
     """Returns start command message"""
+    db.set_user_status(user_id, updated, active)
     return "Welcome to TBot.\n" \
         "Usage:\n" \
         "/help - Show help message\n" \
@@ -105,31 +104,12 @@ def weather():
     """Returns weather in Zagazig, Egypt"""
     location_key = 127335  # Zagazig location key
     url = f"http://dataservice.accuweather.com/forecasts/v1/hourly/1hour/{location_key}"
-    parameters = {
-        "apikey": os.environ.get("ACCUWEATHER"),
-        "metric": True
-    }
+    parameters = {"apikey": os.environ.get("ACCUWEATHER"), "metric": True}
     data = requests.get(url, params=parameters).json()[0]
     temperature = data["Temperature"]["Value"]
     atm_status = data["IconPhrase"]
     location = "Zagazig, Egypt"
     return f"Weather is {atm_status} in {location}.\nAnd it currently feels like {temperature} °C"
-
-
-def events():
-    """Returns events from its table in db"""
-    db = DBHelper()
-    events_list = [list(i) for i in db.get_events()]  # get list of tuples and convert it to list of lists
-    result = ""
-    print("the content of the events list is " + str(events_list))
-    if len(events_list) > 0:
-        for i in range(len(events_list)):
-            # print the list of lists
-            result = str(result) + 'Date: ' + str(events_list[i][1]) + '\n' + \
-                str(events_list[i][0]) + '\n' + '---------------------------' + '\n'
-        return str(result)
-    else:
-        return "you don't have any events in the future! have fun!"
 
 
 def stop(db: DBHelper, user_id: int, updated: int, active: bool):
