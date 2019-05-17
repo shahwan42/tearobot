@@ -2,6 +2,7 @@
     Database management module
 """
 import os
+import sys
 import sqlite3
 from pathlib import Path
 
@@ -191,7 +192,8 @@ class DBHelper():
                 schedule.append(entry)
             return schedule
         except Error as err:
-            exit(err)
+            print(err, file=sys.stderr)
+            return []
 
     def add_announcement(self, ann: Announcement) -> bool:
         """Create new Announcement"""

@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS `Schedule` (
 	`day`	VARCHAR NOT NULL,
 	PRIMARY KEY(`id`)
 );
+DELETE FROM `Schedule`;
 INSERT INTO `Schedule` (id,time,subject,day) VALUES (1,'12:30','DSP Lecture','saturday'),
  (2,'10:10','Communications Lecture','saturday'),
  (3,'08:30','Communications Section','saturday'),
