@@ -8,7 +8,7 @@ from bot.db import DBHelper
 from bot.data_types import Message, User, ScheduleEntry, Announcement
 
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
-DB_SQL_SCRIPT = os.path.join(BASE_DIR, "db", "bot.db.sql")
+DB_SQL_SCRIPT = os.path.join(BASE_DIR, "db", "bot.db.m1.sql")
 
 
 class DBHelperTest(unittest.TestCase):
@@ -154,22 +154,10 @@ class DBHelperTest(unittest.TestCase):
         self.assertEqual(got_user.chat_id, new_chat_id)
 
     def test_get_schedule(self):
-        # create schedule entries
-        sql = "INSERT INTO Schedule (time, saturday, sunday, monday, tuesday, wednesday, thursday) "\
-              "VALUES (?, ?, ?, ?, ?, ?, ?)"
-        ent1 = (time.time(), "Organisation", None, None, None, None, None)
-        ent2 = (time.time(), None, "Measurements", None, None, None, None)
-        ent3 = (time.time(), None, None, None, "Communication", None, None)
-
-        self.db.cur.execute(sql, ent1)
-        self.db.cur.execute(sql, ent2)
-        self.db.cur.execute(sql, ent3)
-
         # get entries
         entries_list = self.db.get_schedule()
-
         self.assertTrue(isinstance(entries_list, list))
-        self.assertTrue(len(entries_list) == 3)
+        self.assertTrue(len(entries_list) == 14)
         self.assertTrue(isinstance(entries_list[0], ScheduleEntry))
         self.assertTrue(entries_list[0].id, 1)
         self.assertTrue(isinstance(entries_list[1], ScheduleEntry))
@@ -177,6 +165,15 @@ class DBHelperTest(unittest.TestCase):
         self.assertTrue(isinstance(entries_list[2], ScheduleEntry))
         self.assertTrue(entries_list[2].id, 3)
         print(entries_list[0], entries_list[1], entries_list[2])
+
+    def test_get_schedule_of(self):
+        schedule = self.db.get_schedule_of("saturday")
+        self.assertTrue(isinstance(schedule, list))
+        self.assertEqual(len(schedule), 3)
+        self.assertTrue(isinstance(schedule[0], tuple))
+        self.assertTrue(isinstance(schedule[1], tuple))
+        self.assertTrue(isinstance(schedule[2], tuple))
+        print("=++Schedule++= ", schedule)
 
     def test_add_announcement(self):
         # add announcement

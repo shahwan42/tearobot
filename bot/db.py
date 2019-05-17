@@ -11,7 +11,7 @@ from loggingconfigs import config_logger
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 DB_DIR = os.path.join(BASE_DIR, "db")
-DB_SQL_SCRIPT = os.path.join(BASE_DIR, "db", "bot.db.sql")
+DB_SQL_SCRIPT = os.path.join(BASE_DIR, "db", "bot.db.m1.sql")
 log = config_logger(__name__)
 
 
@@ -176,8 +176,20 @@ class DBHelper():
             result = self.cur.execute(sql)
             for entry in result.fetchall():
                 schedule_entries.append(
-                    ScheduleEntry(entry[1], entry[2], entry[3], entry[4], entry[5], entry[6], entry[7], entry[0]))
+                    ScheduleEntry(entry[1], entry[2], entry[3], entry[0]))
             return schedule_entries
+        except Error as err:
+            exit(err)
+
+    def get_schedule_of(self, day: str) -> list:
+        """Returns a list of tuples in form of ("time:strftime": "subject:str")"""
+        sql = "SELECT time, subject FROM Schedule WHERE day = ?"
+        schedule = []
+        try:
+            result = self.cur.execute(sql, (day,))
+            for entry in result.fetchall():
+                schedule.append(entry)
+            return schedule
         except Error as err:
             exit(err)
 

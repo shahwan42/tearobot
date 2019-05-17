@@ -58,18 +58,12 @@ class Announcement:
 
 class ScheduleEntry:
     """Schedule Entry type"""
-    def __init__(self, time: int, saturday: str, sunday: str, monday: str, tuesday: str,
-                 wednesday: str, thursday: str, id: int = None):
+    def __init__(self, time: int, subject: str, day: str, id: int = None):
         self.id = id
         self.time = time
-        self.saturday = saturday
-        self.sunday = sunday
-        self.monday = monday
-        self.tuesday = tuesday
-        self.wednesday = wednesday
-        self.thursday = thursday
+        self.subject = subject
+        self.day = day
 
     def __str__(self):
-        return f"[<ScheduleEntry>: id: {self.id}, time: {self.time}, saturday: {self.saturday}, "\
-               f"sunday: {self.sunday}, monday: {self.monday}, tuesday: {self.tuesday}, "\
-               f"wednesday: {self.wednesday}, thursday: {self.thursday}]"
+        return f"[<ScheduleEntry>: id: {self.id}, time: {self.time}, subject: {self.subject}, " \
+               f"day: {self.day}]"
