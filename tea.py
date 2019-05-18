@@ -184,6 +184,18 @@ def main(db: DBHelper):
             #   #   # send today's schedule
             #   #   # sleep for .5 second
 
+            # last_check: nonlocal var will be used to check for future announcement each 2 hours
+            # for less resources consumption
+
+            # get future announcements (where done column is)
+            # if ann.done != "once" nor "twice" and ann.cancelled != true
+            # send announcement to each active user
+            # set ann.done = "once"
+            # if ann.done="once" check timedelta
+            # if timedelta < 24hrs
+            # send the another announcement reminder, and mark ann.done="twice"
+            # else: pass
+
         except KeyboardInterrupt:  # exit on Ctrl-C
             log.info("\nquiting...")
             exit(0)
