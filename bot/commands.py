@@ -19,7 +19,6 @@ def help_command():
         "/calculate - Calculate a mathematical expression\n" \
         "/tweet - Tweet on our Twitter account\n" \
         "/ocr_url - Extract text from image\n"\
-        "/events - Show the upcoming events\n" \
         "/stop - Stop using bot\n" \
         "/start - Start using bot"
 
@@ -35,7 +34,6 @@ def start_command(db: DBHelper, user_id: int, updated: int, active: bool):
         "/calculate - Calculate a mathematical expression\n" \
         "/tweet - Tweet on our Twitter account\n" \
         "/ocr_url - Extract text from image\n" \
-        "/events - Show the upcoming events\n" \
         "/stop - Stop using bot\n" \
         "/start - Start using bot"
 
