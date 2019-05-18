@@ -69,11 +69,10 @@ def translate(message):
     response = requests.post(
         "https://translate.yandex.net/api/v1.5/tr.json/translate",
         params={"key": yandex_token, "text": message, "lang": "en-ar"})
-    jsdict = response.json()
-    if response.status_code == 200:
-        return jsdict.get("text")[0]  # get text list then get element 0 of it
-    else:
+    if response.status_code != 200:
         return "Error Happend, try again later."
+    jsdict = response.json()
+    return jsdict.get("text")[0]  # get text list then get element 0 of it
 
 
 def tweet(text):
