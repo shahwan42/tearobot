@@ -3,10 +3,10 @@ import requests
 import time
 import os
 import urllib
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time as dtime
 
 # -------- project modules
-from bot.utils import is_available_command, command_takes_input, get_hint_message, get_command_handler
+from bot.utils import is_available_command, command_takes_input, get_hint_message, get_command_handler, time_in_range
 from bot.db import DBHelper
 from bot.data_types import Message, User
 from loggingconfigs import config_logger
@@ -23,7 +23,7 @@ URL = f"https://api.telegram.org/bot{bot_token}/"
 def get_updates(offset=None):
     """Get updates after the offset"""
     # timeout will keep the pipe open and tell us when there"re new updates
-    url = URL + 'getUpdates?timeout=120&allowed_updates=["messages"]'
+    url = URL + 'getUpdates?timeout=20&allowed_updates=["messages"]'
     if offset:
         url += f"&offset={offset}"  # add offset if exists
         log.debug('update offset: ' + str(offset))
@@ -172,10 +172,13 @@ def main(db: DBHelper):
             weekdays = ("monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday")
             study_days = (5, 6, 0, 1, 2)
             today = datetime.today().weekday()  # What is today?
-            now_in_egypt = datetime.utcnow()+timedelta(hours=2)  # Cairo UTC+2
-            current_hour = str(format(now_in_egypt, '%H:%M'))  # What is the hour?
+            now_in_egypt = str(format(datetime.utcnow() + timedelta(hours=2), "%H:%M:%S"))  # Cairo time = UTC+2
+            now_in_egypt = dtime(*[int(x) for x in now_in_egypt.split(":")])  # to datetime.time object
+            before_eight = dtime(7, 59, 45)  # get before 8:00AM with 5 seconds
+            after_eight = dtime(8, 0, 15)  # get after 8:00AM with 5 seconds
 
-            if current_hour == "08:00":  # if it's 8:00 in the morning
+            # if it's in range (07:59:55 |08:00| 08:00:05) in the morning
+            if time_in_range(before_eight, after_eight, now_in_egypt):
                 if today in study_days:
                     schedule = db.get_schedule_of(weekdays[today])  # get schedule of today
                     # ================== formating the message to send
@@ -191,7 +194,6 @@ def main(db: DBHelper):
                             log.info(f"Sending today's schedule to: {user}")
                             send_message(user.chat_id, msg)  # send today's schedule
                             time.sleep(0.5)  # sleep for .5 second before sending to the next user
-                    time.sleep(58)  # to make sure we passed the minute (to prevent from sending the schedule again)
 
             # =============================== Handling Announcements =========================================
             # last_check: nonlocal var will be used to check for future announcement each 2 hours
