@@ -2,7 +2,7 @@
 
 A toy telegram-bot built using Python. Meant for educational purposes.
 
-[Click here to try it](https://t.me/tearobot) -- *It might not work all the time*
+[Click here to try it](https://t.me/tearobot) -- *Might not work all the time*
 
 ================================
 
@@ -39,6 +39,7 @@ I try to build most of it from scratch using pure python to learn as much as pos
 * use `master` as `upstream` and `release` for the version to be live. New workflow:
   * branch from master, code, merge on master, push
   * when you hit a release, push it to `release` branch, and use it on the server
+* handle future announcements inside the bot
 * make a cli for the bot to send messages or edit db stuff
 * update contribution guide
 * for next-stage
