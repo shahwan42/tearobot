@@ -3,9 +3,7 @@ import requests
 import time
 import os
 import urllib
-import datetime
-from datetime import datetime
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 # -------- project modules
 from bot.utils import is_available_command, command_takes_input, get_hint_message, get_command_handler
@@ -169,44 +167,33 @@ def main(db: DBHelper):
     updates_offset = None  # track last_update_id to use it as offset
     while True:  # infinitely listen to new updates (as long as the script is running)
         try:
-            log.info("getting updates...")
-            updates = get_updates(updates_offset)  # get new updates after last handled one
-            if "result" in updates:  # to prevent KeyError exception
-                if len(updates["result"]) > 0:  # make sure updates list is longer than 0
-                    updates_offset = last_update_id(updates) + 1  # to remove handled updates
-                    handle_updates(updates["result"], db)  # handle new (unhandled) updates
-                else:
-                    log.info('no updates to be handled')
-            time.sleep(0.5)
-
             # =============================== Handling Schedule ==============================================
-
-            today = datetime.today().weekday()  # What is today?
             # Order  =     0           1          2            3         4          5          6
             weekdays = ("monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday")
             study_days = (5, 6, 0, 1, 2)
-
+            today = datetime.today().weekday()  # What is today?
             now_in_egypt = datetime.utcnow()+timedelta(hours=2)  # Cairo UTC+2
-            current_hour = str(format(now_in_egypt, '%H:%M'))  # What's today?
-            print(current_hour)
-            if current_hour == "03:19":  # if it's 8 in the morning
+            current_hour = str(format(now_in_egypt, '%H:%M'))  # What is the hour?
+
+            if current_hour == "08:00":  # if it's 8:00 in the morning
                 if today in study_days:
                     schedule = db.get_schedule_of(weekdays[today])  # get schedule of today
-                    # ==================formating the message to send
+                    # ================== formating the message to send
                     msg_schedule_part = ""
                     for idx, entry in enumerate(schedule):
                         msg_schedule_part += str(idx+1) + '. ' + entry[1] + ' at ' + entry[0] + '\n'
                     msg = "Good morning, \n" \
-                            "today is {0} and the schedule is: \n\n" \
-                            "{1}".format(weekdays[today].title(), msg_schedule_part)
-                    print("Message to be sent: \n", msg)
-                    users = db.get_users()  #get list of all users
+                          "today is {0} and the schedule is: \n\n" \
+                          "{1}".format(weekdays[today].title(), msg_schedule_part)
+                    users = db.get_users()  # get list of all users
                     for user in users:
                         if user.active:
                             log.info(f"Sending today's schedule to: {user}")
                             send_message(user.chat_id, msg)  # send today's schedule
-                            time.sleep(0.5)  # sleep for .5 second
+                            time.sleep(0.5)  # sleep for .5 second before sending to the next user
+                    time.sleep(58)  # to make sure we passed the minute (to prevent from sending the schedule again)
 
+            # =============================== Handling Announcements =========================================
             # last_check: nonlocal var will be used to check for future announcement each 2 hours
             # for less resources consumption
 
@@ -219,6 +206,17 @@ def main(db: DBHelper):
             # send the another announcement reminder, and mark ann.done="twice"
             # else: pass
 
+            # =============================== Handling incoming messages =====================================
+            log.info("getting updates...")
+            updates = get_updates(updates_offset)  # get new updates after last handled one
+            if "result" in updates:  # to prevent KeyError exception
+                if len(updates["result"]) > 0:  # make sure updates list is longer than 0
+                    updates_offset = last_update_id(updates) + 1  # to remove handled updates
+                    handle_updates(updates["result"], db)  # handle new (unhandled) updates
+                else:
+                    log.info('no updates to be handled')
+
+            time.sleep(0.5)  # delay the loop a .5 second
         except KeyboardInterrupt:  # exit on Ctrl-C
             log.info("\nquiting...")
             exit(0)
