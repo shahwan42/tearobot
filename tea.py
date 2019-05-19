@@ -3,6 +3,9 @@ import requests
 import time
 import os
 import urllib
+import datetime
+from datetime import datetime
+from datetime import timedelta
 
 # -------- project modules
 from bot.utils import is_available_command, command_takes_input, get_hint_message, get_command_handler
@@ -176,13 +179,33 @@ def main(db: DBHelper):
                     log.info('no updates to be handled')
             time.sleep(0.5)
 
-            # if it's 8 in the morning
-            #   # What is today?
-            #   # get schedule of today
-            #   # get list of all users
-            #   # for user in all_users
-            #   #   # send today's schedule
-            #   #   # sleep for .5 second
+            # =============================== Handling Schedule ==============================================
+
+            today = datetime.today().weekday()  # What is today?
+            # Order  =     0           1          2            3         4          5          6
+            weekdays = ("monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday")
+            study_days = (5, 6, 0, 1, 2)
+
+            now_in_egypt = datetime.utcnow()+timedelta(hours=2)  # Cairo UTC+2
+            current_hour = str(format(now_in_egypt, '%H:%M'))  # What's today?
+            print(current_hour)
+            if current_hour == "03:19":  # if it's 8 in the morning
+                if today in study_days:
+                    schedule = db.get_schedule_of(weekdays[today])  # get schedule of today
+                    # ==================formating the message to send
+                    msg_schedule_part = ""
+                    for idx, entry in enumerate(schedule):
+                        msg_schedule_part += str(idx+1) + '. ' + entry[1] + ' at ' + entry[0] + '\n'
+                    msg = "Good morning, \n" \
+                            "today is {0} and the schedule is: \n\n" \
+                            "{1}".format(weekdays[today].title(), msg_schedule_part)
+                    print("Message to be sent: \n", msg)
+                    users = db.get_users()  #get list of all users
+                    for user in users:
+                        if user.active:
+                            log.info(f"Sending today's schedule to: {user}")
+                            send_message(user.chat_id, msg)  # send today's schedule
+                            time.sleep(0.5)  # sleep for .5 second
 
             # last_check: nonlocal var will be used to check for future announcement each 2 hours
             # for less resources consumption
