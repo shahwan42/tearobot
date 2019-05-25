@@ -47,8 +47,8 @@ CREATE TABLE IF NOT EXISTS `Message` (
 );
 CREATE TABLE IF NOT EXISTS `Announcement` (
 	"id"			INTEGER PRIMARY KEY AUTOINCREMENT,
-	"time"			INTEGER,
+	"time"			VARCHAR NOT NULL,
 	"description" 	TEXT,
-	"cancelled"		INTEGER
+	"done"			VARCHAR
 );
 COMMIT;
