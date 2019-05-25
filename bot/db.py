@@ -217,3 +217,16 @@ class DBHelper():
             return ann_list
         except Error as err:
             exit(err)
+
+    def update_announcement(self, id: int, done: str):
+        """Update ann.done"""
+        values = ["once", "twice", "cancelled"]
+        if done not in values:
+            exit("You must provide a valid done value")
+        sql = "UPDATE Announcement SET done = ? WHERE id = ?"
+        try:
+            result = self.cur.execute(sql, (done, id))
+            return result
+        except Error as err:
+            self.conn.rollback()
+            exit(err)

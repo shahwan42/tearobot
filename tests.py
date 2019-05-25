@@ -215,14 +215,22 @@ class DBHelperTest(unittest.TestCase):
         self.assertTrue(isinstance(anns[1], Announcement))
         self.assertTrue(isinstance(anns[2], Announcement))
 
+    def test_update_announcement(self):
+        # add an announcment
+        self.db.add_announcement(Announcement("21:30", "DSP Assignment 10 should be delivered tomorrow", ""))
+        ann = self.db.get_announcements()[0]  # get announcment before update to use its id
+        self.db.update_announcement(ann.id, "once")  # update
+        ann_updated = self.db.get_announcements()[0]  # get announcment after update
+        self.assertEqual(ann_updated.done,  "once")  # test updated value
 
-class CommandsTest(unittest.TestCase):
 
-    def test_calculate_command(self):
-        self.assertEqual(calculate("5*5"), "Result: 25")
+# class CommandsTest(unittest.TestCase):
 
-    def test_translate_command(self):
-        self.assertEqual(translate("Ahmed"), "أحمد")
+#     def test_calculate_command(self):
+#         self.assertEqual(calculate("5*5"), "Result: 25")
+
+#     def test_translate_command(self):
+#         self.assertEqual(translate("Ahmed"), "أحمد")
 
 
 if __name__ == "__main__":
