@@ -208,6 +208,23 @@ def main(db: DBHelper):
             # send the another announcement reminder, and mark ann.done="twice"
             # else: pass
 
+            anns = db.get_announcements()
+            for ann in anns:
+                if ann.done == "":
+                    users = db.get_users()  # get list of all users
+                    for user in users:
+                        if user.active:
+                            log.info(f"Sending announcement: {ann} schedule to: {user}")
+                            send_message(user.chat_id, ann.description)
+                            ann.done = "once"
+                            db.update_announcement(ann.id)
+                            time.sleep(0.5)  # sleep for .5 second before sending to the next user
+                elif ann.done == "once":
+                    # if ann.time - current_time = 1 day
+                    "YYYY-MM-DD HH:MM"
+                    if ann.time - timedelta:
+                pass
+
             # =============================== Handling incoming messages =====================================
             log.info("getting updates...")
             updates = get_updates(updates_offset)  # get new updates after last handled one
