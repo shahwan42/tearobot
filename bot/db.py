@@ -197,9 +197,9 @@ class DBHelper():
 
     def add_announcement(self, ann: Announcement) -> bool:
         """Create new Announcement"""
-        sql = "INSERT INTO Announcement (time, description, cancelled) VALUES (?, ?, ?)"
+        sql = "INSERT INTO Announcement (time, description, done) VALUES (?, ?, ?)"
         try:
-            self.cur.execute(sql, (ann.time, ann.description, ann.cancelled))
+            self.cur.execute(sql, (ann.time, ann.description, ann.done))
             return True
         except Error as err:
             self.conn.rollback()

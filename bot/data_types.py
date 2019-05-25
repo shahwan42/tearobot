@@ -45,15 +45,15 @@ class Message:
 
 class Announcement:
     """Event type"""
-    def __init__(self, time: int, description: str, cancelled: bool, id: int = None):
+    def __init__(self, time: str, description: str, done: str, id: int = None):
         self.time = time
         self.description = description
-        self.cancelled = bool(cancelled)
+        self.done = done
         self.id = id
 
     def __str__(self):
         return f"[<Event>: id: {self.id}, time: {self.time}, description: {self.description}, " \
-               f"cancelled: {self.cancelled}]"
+               f"cancelled: {self.done}]"
 
 
 class ScheduleEntry:

@@ -145,7 +145,7 @@ class DBHelperTest(unittest.TestCase):
     def test_set_user_chat_id(self):
         # create a user without caht_id
         user = User(7043739, False, False, "Ahme", "Shahwa", "ash75", "en", True, 51291, 30349, "/calculate", None)
-        self.db.add_user(user)   
+        self.db.add_user(user)
         # alter user's chat_id
         new_chat_id = 3456
         self.db.set_user_chat_id(user.id, time.time(), new_chat_id)
@@ -177,9 +177,8 @@ class DBHelperTest(unittest.TestCase):
 
     def test_add_announcement(self):
         # add announcement
-        ann = Announcement(time.time(), "DSP Assignment 10 should be delivered tomorrow", False)
-        time.sleep(0.5)
-        ann1 = Announcement(time.time(), "Another test announcement", False)
+        ann = Announcement("08:30", "DSP Assignment 10 should be delivered tomorrow", "once")
+        ann1 = Announcement("10:10", "Another test announcement", "twice")
         self.assertTrue(self.db.add_announcement(ann))
         self.assertTrue(self.db.add_announcement(ann1))
 
@@ -192,18 +191,18 @@ class DBHelperTest(unittest.TestCase):
         self.assertEqual(1, got_ann[0])
         self.assertEqual(ann.time, got_ann[1])
         self.assertEqual(ann.description, got_ann[2])
-        self.assertEqual(ann.cancelled, got_ann[3])
+        self.assertEqual(ann.done, got_ann[3])
 
         self.assertEqual(2, got_ann1[0])
         self.assertEqual(ann1.time, got_ann1[1])
         self.assertEqual(ann1.description, got_ann1[2])
-        self.assertEqual(ann1.cancelled, got_ann1[3])
+        self.assertEqual(ann1.done, got_ann1[3])
 
     def test_get_announcements(self):
         # add some announcements
-        ann1 = Announcement(time.time(), "DSP Assignment 10 should be delivered tomorrow", False)
-        ann2 = Announcement(time.time(), "Communication Lecture is cancelled", False)
-        ann3 = Announcement(time.time(), "Dr Tamer is not coming again", False)
+        ann1 = Announcement("21:30", "DSP Assignment 10 should be delivered tomorrow", "")
+        ann2 = Announcement("10:30", "Communication Lecture is cancelled", "once")
+        ann3 = Announcement("09:30", "Dr Tamer is not coming again", "twice")
 
         self.db.add_announcement(ann1)
         self.db.add_announcement(ann2)
