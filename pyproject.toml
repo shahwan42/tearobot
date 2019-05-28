@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "tearobot"
+version = "0.2.0"
+description = "A toy telegram bot using python"
+authors = ["Ahmed Shahwan <m@ahsh.xyz>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.6"
+requests = "^2.22"
+tweepy = "^3.7"
+flake8 = "^3.7"
+
+[tool.poetry.dev-dependencies]
+flake8 = "^3.7"
+pylint = "^2.3"
+isort = "^4.3"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
