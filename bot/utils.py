@@ -53,7 +53,7 @@ def get_command_handler(command):
     return command_service.get(command)
 
 
-def time_in_range(start, end, x):
+def time_in_range(start, end, x) -> bool:
     """Return true if x is in the range [start, end]"""
     if start <= end:
         return start <= x <= end

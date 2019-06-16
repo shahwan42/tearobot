@@ -3,6 +3,7 @@ import requests
 import time
 import os
 import urllib
+import threading
 from datetime import datetime, timedelta, time as dtime
 
 # -------- project modules
@@ -44,6 +45,39 @@ def last_update_id(updates):
     return max(update_ids)  # the last update is the higher one
 
 
+def should_send_schedule():
+    now_in_egypt = str(format(datetime.utcnow() + timedelta(hours=2), "%H:%M:%S"))  # Cairo time = UTC+2
+    now_in_egypt = dtime(*[int(x) for x in now_in_egypt.split(":")])  # to datetime.time object
+    before_eight = dtime(7, 59, 55)  # get before 8:00AM with 5 seconds
+    after_eight = dtime(8, 0, 5)  # get after 8:00AM with 5 seconds
+
+    return time_in_range(before_eight, after_eight, now_in_egypt)
+
+
+def send_schedule(db: DBHelper):
+    # Order  =     0           1          2            3         4          5          6
+    weekdays = ("monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday")
+    study_days = (5, 6, 0, 1, 2)
+    today = datetime.today().weekday()  # What is today?
+
+    if today in study_days:
+        schedule = db.get_schedule_of(weekdays[today])  # get schedule of today
+        # ================== formating the message to send
+        msg_schedule_part = ""
+        for idx, entry in enumerate(schedule):
+            msg_schedule_part += str(idx+1) + '. ' + entry[1] + ' at ' + entry[0] + '\n'
+        msg = "Good morning, \n" \
+              "today is {0} and the schedule is: \n\n" \
+              "{1}".format(weekdays[today].title(), msg_schedule_part)
+        users = db.get_users()  # get list of all users
+        for user in users:
+            if user.active:
+                log.info(f"Sending today's schedule to: {user}")
+                send_message(user.chat_id, msg)  # send today's schedule
+                time.sleep(0.5)  # sleep for .5 second before sending to the next user
+
+
+# TODO: clean this and its realted code
 current_command = None  # stores currently operating command
 
 
@@ -168,32 +202,11 @@ def main(db: DBHelper):
     while True:  # infinitely listen to new updates (as long as the script is running)
         try:
             # =============================== Handling Schedule ==============================================
-            # Order  =     0           1          2            3         4          5          6
-            weekdays = ("monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday")
-            study_days = (5, 6, 0, 1, 2)
-            today = datetime.today().weekday()  # What is today?
-            now_in_egypt = str(format(datetime.utcnow() + timedelta(hours=2), "%H:%M:%S"))  # Cairo time = UTC+2
-            now_in_egypt = dtime(*[int(x) for x in now_in_egypt.split(":")])  # to datetime.time object
-            before_eight = dtime(7, 59, 45)  # get before 8:00AM with 5 seconds
-            after_eight = dtime(8, 0, 15)  # get after 8:00AM with 5 seconds
 
             # if it's in range (07:59:55 |08:00| 08:00:05) in the morning
-            if time_in_range(before_eight, after_eight, now_in_egypt):
-                if today in study_days:
-                    schedule = db.get_schedule_of(weekdays[today])  # get schedule of today
-                    # ================== formating the message to send
-                    msg_schedule_part = ""
-                    for idx, entry in enumerate(schedule):
-                        msg_schedule_part += str(idx+1) + '. ' + entry[1] + ' at ' + entry[0] + '\n'
-                    msg = "Good morning, \n" \
-                          "today is {0} and the schedule is: \n\n" \
-                          "{1}".format(weekdays[today].title(), msg_schedule_part)
-                    users = db.get_users()  # get list of all users
-                    for user in users:
-                        if user.active:
-                            log.info(f"Sending today's schedule to: {user}")
-                            send_message(user.chat_id, msg)  # send today's schedule
-                            time.sleep(0.5)  # sleep for .5 second before sending to the next user
+            if should_send_schedule:
+                th = threading.Thread(target=send_schedule, args=(db,))
+                th.start()
 
             # =============================== Handling Announcements =========================================
             # last_check: nonlocal var will be used to check for future announcement each 2 hours
@@ -208,6 +221,7 @@ def main(db: DBHelper):
             # send the another announcement reminder, and mark ann.done="twice"
             # else: pass
 
+            # TODO: Use Multithreading to handle this
             # anns = db.get_announcements()
             # for ann in anns:
             #     if ann.done == "":

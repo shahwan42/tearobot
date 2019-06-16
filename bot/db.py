@@ -21,7 +21,7 @@ class DBHelper():
     def __init__(self, filename="bot.db"):
         try:
             self.db_file = str(os.path.join(DB_DIR, filename))
-            self.conn = sqlite3.connect(self.db_file)  # new db connection
+            self.conn = sqlite3.connect(self.db_file, check_same_thread=False)  # new db connection
             self.cur = self.conn.cursor()  # obtain a cursor
             log.info("DB Initialized.")
         except Error as err:
