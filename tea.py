@@ -21,6 +21,11 @@ if not bot_token:
 URL = f"https://api.telegram.org/bot{bot_token}/"
 
 
+def send_message(chat_id, text):
+    """Encodes ``text`` using url-based encoding and send it to ``chat_id``"""
+    requests.get(URL + f"sendMessage?chat_id={chat_id}&text={urllib.parse.quote_plus(text)}")
+
+
 def get_updates(offset=None):
     """Get updates after the offset"""
     # timeout will keep the pipe open and tell us when there"re new updates
@@ -29,11 +34,6 @@ def get_updates(offset=None):
         url += f"&offset={offset}"  # add offset if exists
         log.debug('update offset: ' + str(offset))
     return requests.get(url).json()  # return dict of latest updates
-
-
-def send_message(chat_id, text):
-    """Encodes ``text`` using url-based encoding and send it to ``chat_id``"""
-    requests.get(URL + f"sendMessage?chat_id={chat_id}&text={urllib.parse.quote_plus(text)}")
 
 
 def last_update_id(updates):
@@ -45,67 +45,39 @@ def last_update_id(updates):
     return max(update_ids)  # the last update is the higher one
 
 
-def should_send_schedule():
-    now_in_egypt = str(format(datetime.utcnow() + timedelta(hours=2), "%H:%M:%S"))  # Cairo time = UTC+2
-    now_in_egypt = dtime(*[int(x) for x in now_in_egypt.split(":")])  # to datetime.time object
-    before_eight = dtime(7, 59, 55)  # get before 8:00AM with 5 seconds
-    after_eight = dtime(8, 0, 5)  # get after 8:00AM with 5 seconds
+def extract_message_from(update) -> Message:
+    # getting message data
+    msg_id = update.get("message").get("message_id")  # message id
+    msg_update_id = update.get("update_id")  # update id of this message
+    msg_user_id = update.get("message").get("from").get("id")  # sending user
+    msg_chat_id = update.get("message").get("chat").get("id")  # chat id of the message
+    msg_date = update.get("message").get("date")  # message date
+    msg_text = update.get("message").get("text", "")  # message text
 
-    return time_in_range(before_eight, after_eight, now_in_egypt)
+    log.info("collecting message data... done")
+    # Create Message object from incoming data
+    msg = Message(msg_id, msg_update_id, msg_user_id, msg_chat_id, msg_date, msg_text)
+    log.info("creating message object from collected data... done")
 
-
-def send_schedule(db: DBHelper):
-    # Order  =     0           1          2            3         4          5          6
-    weekdays = ("monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday")
-    study_days = (5, 6, 0, 1, 2)
-    today = datetime.today().weekday()  # What is today?
-
-    if today in study_days:
-        schedule = db.get_schedule_of(weekdays[today])  # get schedule of today
-        # ================== formating the message to send
-        msg_schedule_part = ""
-        for idx, entry in enumerate(schedule):
-            msg_schedule_part += str(idx+1) + '. ' + entry[1] + ' at ' + entry[0] + '\n'
-        msg = "Good morning, \n" \
-              "today is {0} and the schedule is: \n\n" \
-              "{1}".format(weekdays[today].title(), msg_schedule_part)
-        users = db.get_users()  # get list of all users
-        for user in users:
-            if user.active:
-                log.info(f"Sending today's schedule to: {user}")
-                send_message(user.chat_id, msg)  # send today's schedule
-                time.sleep(0.5)  # sleep for .5 second before sending to the next user
+    return msg
 
 
-# TODO: clean this and its realted code
-current_command = None  # stores currently operating command
+def extract_user_from(update) -> User:
+    pass
 
 
 def handle_updates(updates: list, db: DBHelper):
     """Handles incoming updates to the bot"""
-    global current_command  # use current_command var from global scope
-    for update in updates:  # loop through updates
-        # db.add_message((id: int, update_id: int, user_id: int, chat_id: int, date: int(unix_timestamp), text: str))
 
-        # TODO: common message and user data from the same update
+    for update in updates:  # loop through updates
 
         # Skip edited messages
         if not update.get("message"):
             continue
 
-        # getting message data
-        msg_id = update.get("message").get("message_id")  # message id
-        msg_update_id = update.get("update_id")  # update id of this message
-        msg_user_id = update.get("message").get("from").get("id")  # sending user
-        msg_chat_id = update.get("message").get("chat").get("id")  # chat id of the message
-        msg_date = update.get("message").get("date")  # message date
-        msg_text = update.get("message").get("text", "")  # message text
-
-        log.info("collecting message data... done")
-        # Create Message object from incoming data
-        msg = Message(msg_id, msg_update_id, msg_user_id, msg_chat_id, msg_date, msg_text)
-        log.info("creating message object from collected data... done")
-        if not db.get_message(msg.id):  # if message doesn't exist already
+        msg = extract_message_from(update)
+        # if message doesn't exist already (prevent repeating messages between bot restarting)
+        if not db.get_message(msg.id):
             db.add_message(msg)
             log.info("New message saved.")
 
@@ -144,11 +116,12 @@ def handle_updates(updates: list, db: DBHelper):
         log.info("creating user object from collected data... done")
 
         user_last_command = user.last_command
+        current_command = None
         text = None  # msg text
-        chat = msg_chat_id  # chat id
-        log.debug("user: " + str(user_id) + " sent a message - chat_id: " + str(msg_chat_id))
-        if msg_text:  # handle text messages only
-            text = msg_text.strip()  # extract msg text
+        chat = msg.chat_id  # chat id
+        log.debug("user: " + str(user_id) + " sent a message - chat_id: " + str(msg.chat_id))
+        if msg.text:  # handle text messages only
+            text = msg.text.strip()  # extract msg text
             if text and chat:  # make sure we have txt msg and chat_id
                 log.info('text message and chat_id are  extracted.')
                 if text.startswith("/"):  # if command
@@ -196,63 +169,111 @@ def handle_updates(updates: list, db: DBHelper):
             send_message(chat, "I handle text messages only!")
 
 
-def main(db: DBHelper):
-    """The entry point"""
+def updates_loop():
     updates_offset = None  # track last_update_id to use it as offset
     while True:  # infinitely listen to new updates (as long as the script is running)
-        try:
-            # =============================== Handling Schedule ==============================================
+        log.info("getting updates...")
+        updates = get_updates(updates_offset)  # get new updates after last handled one
+        if "result" in updates:  # to prevent KeyError exception
+            if len(updates["result"]) > 0:  # make sure updates list is longer than 0
+                updates_offset = last_update_id(updates) + 1  # to remove handled updates
+                handle_updates(updates["result"], db)  # handle new (unhandled) updates
+            else:
+                log.info("no updates to be handled")
 
-            # if it's in range (07:59:55 |08:00| 08:00:05) in the morning
-            if should_send_schedule:
-                th = threading.Thread(target=send_schedule, args=(db,))
-                th.start()
+        time.sleep(0.3)  # delay the loop 300 milliseconds
 
-            # =============================== Handling Announcements =========================================
-            # last_check: nonlocal var will be used to check for future announcement each 2 hours
-            # for less resources consumption
 
-            # get future announcements (where done column is)
-            # if ann.done != "once" nor "twice" and ann.cancelled != true
-            # send announcement to each active user
-            # set ann.done = "once"
-            # if ann.done="once" check timedelta
-            # if timedelta < 24hrs
-            # send the another announcement reminder, and mark ann.done="twice"
-            # else: pass
+def should_send_schedule():
+    now_in_egypt = str(format(datetime.utcnow() + timedelta(hours=2), "%H:%M:%S"))  # Cairo time = UTC+2
+    now_in_egypt = dtime(*[int(x) for x in now_in_egypt.split(":")])  # to datetime.time object
+    before_eight = dtime(7, 59, 55)  # get before 8:00AM with 5 seconds
+    after_eight = dtime(8, 0, 5)  # get after 8:00AM with 5 seconds
 
-            # TODO: Use Multithreading to handle this
-            # anns = db.get_announcements()
-            # for ann in anns:
-            #     if ann.done == "":
-            #         users = db.get_users()  # get list of all users
-            #         for user in users:
-            #             if user.active:
-            #                 log.info(f"Sending announcement: {ann} schedule to: {user}")
-            #                 send_message(user.chat_id, ann.description)
-            #                 ann.done = "once"
-            #                 db.update_announcement(ann.id)
-            #                 time.sleep(0.5)  # sleep for .5 second before sending to the next user
-            #     elif ann.done == "once":
-            #         # if ann.time - current_time = 1 day
-            #         "YYYY-MM-DD HH:MM"
-            #         if ann.time - timedelta:
-            #     pass
+    return time_in_range(before_eight, after_eight, now_in_egypt)
 
-            # =============================== Handling incoming messages =====================================
-            log.info("getting updates...")
-            updates = get_updates(updates_offset)  # get new updates after last handled one
-            if "result" in updates:  # to prevent KeyError exception
-                if len(updates["result"]) > 0:  # make sure updates list is longer than 0
-                    updates_offset = last_update_id(updates) + 1  # to remove handled updates
-                    handle_updates(updates["result"], db)  # handle new (unhandled) updates
-                else:
-                    log.info('no updates to be handled')
 
-            time.sleep(0.5)  # delay the loop a .5 second
-        except KeyboardInterrupt:  # exit on Ctrl-C
-            log.info("\nquiting...")
-            exit(0)
+def send_schedule(db: DBHelper):
+    # Order  =     0           1          2            3         4          5          6
+    weekdays = ("monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday")
+    study_days = (5, 6, 0, 1, 2)
+    today = datetime.today().weekday()  # What is today?
+
+    if today in study_days:
+        schedule = db.get_schedule_of(weekdays[today])  # get schedule of today
+        # ================== formating the message to send
+        msg_schedule_part = ""
+        for idx, entry in enumerate(schedule):
+            msg_schedule_part += str(idx+1) + '. ' + entry[1] + ' at ' + entry[0] + '\n'
+        msg = "Good morning, \n" \
+              "today is {0} and the schedule is: \n\n" \
+              "{1}".format(weekdays[today].title(), msg_schedule_part)
+        users = db.get_users()  # get list of all users
+        for user in users:
+            if user.active:
+                log.info(f"Sending today's schedule to: {user}")
+                send_message(user.chat_id, msg)  # send today's schedule
+                time.sleep(0.5)  # sleep for .5 second before sending to the next user
+
+
+def schedule_loop(db: DBHelper):
+    """Handle schedules"""
+    while True:
+        # if it's in range (07:59:55 |08:00| 08:00:05) in the morning
+        if should_send_schedule():
+            send_schedule(db)
+        time.sleep(3)
+
+
+def announcements_loop():
+    """Hanadle announcements"""
+    # =============================== Handling Announcements =========================================
+    # last_check: nonlocal var will be used to check for future announcement each 2 hours
+    # for less resources consumption
+    while True:
+        # get future announcements (where done column is)
+        # if ann.done != "once" nor "twice" and ann.cancelled != true
+        # send announcement to each active user
+        # set ann.done = "once"
+        # if ann.done="once" check timedelta
+        # if timedelta < 24hrs
+        # send the another announcement reminder, and mark ann.done="twice"
+        # else: pass
+
+        # anns = db.get_announcements()
+        # for ann in anns:
+        #     if ann.done == "":
+        #         users = db.get_users()  # get list of all users
+        #         for user in users:
+        #             if user.active:
+        #                 log.info(f"Sending announcement: {ann} schedule to: {user}")
+        #                 send_message(user.chat_id, ann.description)
+        #                 ann.done = "once"
+        #                 db.update_announcement(ann.id)
+        #                 time.sleep(0.5)  # sleep for .5 second before sending to the next user
+        #     elif ann.done == "once":
+        #         # if ann.time - current_time = 1 day
+        #         "YYYY-MM-DD HH:MM"
+        #         if ann.time - timedelta:
+        #     pass
+        pass
+
+
+def main(db: DBHelper):
+    """The entry point"""
+    try:
+        th1 = threading.Thread(target=updates_loop, daemon=True)
+        # th2 = threading.Thread(target=schedule_loop)
+        # th3 = threading.Thread(target=announcements_loop)
+        th1.start()
+        th1.join()
+
+    # exit on Ctrl-C
+    except KeyboardInterrupt:
+        log.info("------> Quiting...")
+        # th2.join()
+        # th3.join()
+        exit(0)
 
 
 if __name__ == "__main__":
