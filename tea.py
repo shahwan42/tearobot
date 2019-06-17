@@ -181,7 +181,7 @@ def updates_loop():
             else:
                 log.info("no updates to be handled")
 
-        time.sleep(0.3)  # delay the loop 300 milliseconds
+        # time.sleep(0.3)  # delay the loop 300 milliseconds
 
 
 def should_send_schedule():
@@ -263,16 +263,16 @@ def main(db: DBHelper):
     """The entry point"""
     try:
         th1 = threading.Thread(target=updates_loop, daemon=True)
-        # th2 = threading.Thread(target=schedule_loop)
+        th2 = threading.Thread(target=schedule_loop, args=(db,), daemon=True)
         # th3 = threading.Thread(target=announcements_loop)
         th1.start()
+        th2.start()
         th1.join()
+        th2.join()
 
     # exit on Ctrl-C
     except KeyboardInterrupt:
         log.info("------> Quiting...")
-        # th2.join()
-        # th3.join()
         exit(0)
 
 
