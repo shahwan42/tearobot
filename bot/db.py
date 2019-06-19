@@ -225,8 +225,9 @@ class DBHelper():
             exit("You must provide a valid done value")
         sql = "UPDATE Announcement SET done = ? WHERE id = ?"
         try:
-            result = self.cur.execute(sql, (done, id))
-            return result
+            self.cur.execute(sql, (done, id))
+            self.conn.commit()
+            return True
         except Error as err:
             self.conn.rollback()
             exit(err)
