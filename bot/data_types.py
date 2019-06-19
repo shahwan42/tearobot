@@ -52,8 +52,8 @@ class Announcement:
         self.id = id
 
     def __str__(self):
-        return f"[<Event>: id: {self.id}, time: {self.time}, description: {self.description}, " \
-               f"cancelled: {self.done}]"
+        return f"[<Announcement>: id: {self.id}, time: {self.time}, description: {self.description}, " \
+               f"done: {self.done}]"
 
 
 class ScheduleEntry:

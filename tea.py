@@ -3,7 +3,7 @@ import requests
 import time
 import os
 import urllib
-from datetime import datetime, timedelta, time as dtime
+from datetime import datetime, timedelta, time as dtime, date
 
 # -------- project modules
 from bot.utils import is_available_command, command_takes_input, get_hint_message, get_command_handler, time_in_range
@@ -196,35 +196,59 @@ def main(db: DBHelper):
                             time.sleep(0.5)  # sleep for .5 second before sending to the next user
 
             # =============================== Handling Announcements =========================================
-            # last_check: nonlocal var will be used to check for future announcement each 2 hours
-            # for less resources consumption
-
-            # get future announcements (where done column is)
-            # if ann.done != "once" nor "twice" and ann.cancelled != true
-            # send announcement to each active user
-            # set ann.done = "once"
-            # if ann.done="once" check timedelta
-            # if timedelta < 24hrs
-            # send the another announcement reminder, and mark ann.done="twice"
-            # else: pass
-
-            # anns = db.get_announcements()
-            # for ann in anns:
-            #     if ann.done == "":
-            #         users = db.get_users()  # get list of all users
-            #         for user in users:
-            #             if user.active:
-            #                 log.info(f"Sending announcement: {ann} schedule to: {user}")
-            #                 send_message(user.chat_id, ann.description)
-            #                 ann.done = "once"
-            #                 db.update_announcement(ann.id)
-            #                 time.sleep(0.5)  # sleep for .5 second before sending to the next user
-            #     elif ann.done == "once":
-            #         # if ann.time - current_time = 1 day
-            #         "YYYY-MM-DD HH:MM"
-            #         if ann.time - timedelta:
-            #     pass
-
+            before_seven = dtime(6, 59, 45)  # get before 7:00AM with 5 seconds
+            after_seven = dtime(7, 0, 15)  # get after 7:00AM with 5 seconds
+            before_seven = dtime(20, 16, 0)  # get before 7:00AM with 5 seconds
+            after_seven = dtime(20, 17, 0)  # get after 7:00AM with 5 seconds
+            if time_in_range(before_seven, after_seven, now_in_egypt):
+                anns = db.get_announcements()
+                print(anns)
+                for ann in anns:
+                    print(ann)
+                    if ann.done == "" or ann.done is None:
+                        users = db.get_users()  # get list of all users
+                        for user in users:
+                            if user.active:
+                                log.info(f"Sending announcement: {ann} schedule to: {user}")
+                                send_message(user.chat_id, ann.description)
+                                time.sleep(0.5)  # sleep for .5 second before sending to the next user
+                        # print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+                        print(db.update_announcement(ann.id, "once"))
+                        # print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+                    elif ann.done == "cancelled":
+                        users = db.get_users()  # get list of all users
+                        for user in users:
+                            if user.active:
+                                log.info(f"Sending cancelled announcement: {ann} schedule to: {user}")
+                                send_message(user.chat_id, ann.description + " IS CANCELLED")
+                                time.sleep(0.5)  # sleep for .5 second before sending to the next user
+                        # print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+                        print(db.update_announcement(ann.id, "twice"))
+                        # print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+                    else:  # if ann.done=="once"
+                        list_ann_time = ann.time.split(" ")
+                        ann_time_day = int(list_ann_time[0].split("-")[0])
+                        ann_time_month = int(list_ann_time[0].split("-")[1])
+                        ann_day = date(datetime.today().year, ann_time_month, ann_time_day)
+                        today = datetime.today().date()
+                        # print("--------------------------------------------------------")
+                        # print(list_ann_time)
+                        # print(ann_time_day)
+                        # print(ann_time_month)
+                        # print(ann_day)
+                        # print(today)
+                        # print((ann_day - today))
+                        # print((ann_day - today).days)
+                        # print("--------------------------------------------------------")
+                        if (ann_day - today).days == 1:
+                            for user in users:
+                                if user.active:
+                                    log.info(f"Sending announcement (done=once): {ann} schedule to: {user}")
+                                    send_message(user.chat_id, ann.description + " TOMORROW")
+                                    time.sleep(0.5)  # sleep for .5 second before sending to the next user
+                            # print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+                            print(db.update_announcement(ann.id, "twice")
+                            # print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
             # =============================== Handling incoming messages =====================================
             log.info("getting updates...")
             updates = get_updates(updates_offset)  # get new updates after last handled one
