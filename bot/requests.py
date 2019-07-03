@@ -9,7 +9,7 @@ class Requests:
         response = request.urlopen(url)
         encoded_params = parse.urlencode(params)
         full_url = url + encoded_params
-        return response.read().decode('utf-8')
+        return response.read().decode("utf-8")
 
     def post(self):
         pass

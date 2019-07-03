@@ -12,10 +12,11 @@ DB_SQL_SCRIPT = os.path.join(BASE_DIR, "db", "bot.db.m1.sql")
 
 
 class DBHelperTest(unittest.TestCase):
-
     def setUp(self):
         """Create/connect to development database"""
-        self.SQL_SCRIPT = Path(DB_SQL_SCRIPT).read_text()  # read a PosixPath file as str
+        self.SQL_SCRIPT = Path(
+            DB_SQL_SCRIPT
+        ).read_text()  # read a PosixPath file as str
         # db connection & creation
         self.db = DBHelper(filename="test.db")
         print("connecting to db... done.")
@@ -60,8 +61,20 @@ class DBHelperTest(unittest.TestCase):
 
     def test_add_user(self):
         # insert new user
-        user = User(70437390, False, True, "Ahmed", "Shahwan", "ash753", "en", True, 1555512911.45624,
-                    1556303495.79887, "/calculate", 332324)
+        user = User(
+            70437390,
+            False,
+            True,
+            "Ahmed",
+            "Shahwan",
+            "ash753",
+            "en",
+            True,
+            1555512911.45624,
+            1556303495.79887,
+            "/calculate",
+            332324,
+        )
         self.assertTrue(self.db.add_user(user))
         # testing if it's inserted correctly
         sql = "SELECT * FROM User"
@@ -82,8 +95,20 @@ class DBHelperTest(unittest.TestCase):
     def test_get_user(self):
         # inserting user to db using sql
         sql = "INSERT INTO User VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-        params = (70437390, False, True, "Ahmed", "Shahwan", "ash753", "en", True, 1555512911.45624,
-                  1556303495.79887, "/calculate", 2345)
+        params = (
+            70437390,
+            False,
+            True,
+            "Ahmed",
+            "Shahwan",
+            "ash753",
+            "en",
+            True,
+            1555512911.45624,
+            1556303495.79887,
+            "/calculate",
+            2345,
+        )
         self.db.cur.execute(sql, params)
         # user exists
         user = self.db.get_user(params[0])
@@ -108,9 +133,48 @@ class DBHelperTest(unittest.TestCase):
         # add users using sql, then get them using the function
         # inserting users using sql
         sql = "INSERT INTO User VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-        user1 = (43739, False, False, "Ahme", "Shahwa", "ash75", "en", True, 51291, 30349, "/calculate", 33)
-        user2 = (4373, False, True, "Ahm", "Shahw", "ash7", "en", False, 5129, 3034, "/translate", 555)
-        user3 = (437, False, False, "Ah", "Shah", "ash", "en", True, 512, 303, "/ocr_url", 556)
+        user1 = (
+            43739,
+            False,
+            False,
+            "Ahme",
+            "Shahwa",
+            "ash75",
+            "en",
+            True,
+            51291,
+            30349,
+            "/calculate",
+            33,
+        )
+        user2 = (
+            4373,
+            False,
+            True,
+            "Ahm",
+            "Shahw",
+            "ash7",
+            "en",
+            False,
+            5129,
+            3034,
+            "/translate",
+            555,
+        )
+        user3 = (
+            437,
+            False,
+            False,
+            "Ah",
+            "Shah",
+            "ash",
+            "en",
+            True,
+            512,
+            303,
+            "/ocr_url",
+            556,
+        )
         self.db.cur.execute(sql, user1)
         self.db.cur.execute(sql, user2)
         self.db.cur.execute(sql, user3)
@@ -124,17 +188,45 @@ class DBHelperTest(unittest.TestCase):
 
     def test_set_user_last_command(self):
         # create a user in db with tested functions
-        user = User(7043739, False, False, "Ahme", "Shahwa", "ash75", "en", True, 51291, 30349, "/calculate", 5554)
+        user = User(
+            7043739,
+            False,
+            False,
+            "Ahme",
+            "Shahwa",
+            "ash75",
+            "en",
+            True,
+            51291,
+            30349,
+            "/calculate",
+            5554,
+        )
         self.db.add_user(user)
         # alter user's last command
-        self.assertTrue(self.db.set_user_last_command(user.id, time.time(), "/translate"))
+        self.assertTrue(
+            self.db.set_user_last_command(user.id, time.time(), "/translate")
+        )
         # test alteration success
         got_user = self.db.get_user(user.id)
         self.assertEqual("/translate", got_user.last_command)
 
     def test_set_user_status(self):
         # create a user
-        user = User(7043739, False, False, "Ahme", "Shahwa", "ash75", "en", True, 51291, 30349, "/calculate", 5556)
+        user = User(
+            7043739,
+            False,
+            False,
+            "Ahme",
+            "Shahwa",
+            "ash75",
+            "en",
+            True,
+            51291,
+            30349,
+            "/calculate",
+            5556,
+        )
         self.db.add_user(user)
         # alter user's status
         self.assertTrue(self.db.set_user_status(user.id, time.time(), False))
@@ -144,7 +236,20 @@ class DBHelperTest(unittest.TestCase):
 
     def test_set_user_chat_id(self):
         # create a user without caht_id
-        user = User(7043739, False, False, "Ahme", "Shahwa", "ash75", "en", True, 51291, 30349, "/calculate", None)
+        user = User(
+            7043739,
+            False,
+            False,
+            "Ahme",
+            "Shahwa",
+            "ash75",
+            "en",
+            True,
+            51291,
+            30349,
+            "/calculate",
+            None,
+        )
         self.db.add_user(user)
         # alter user's chat_id
         new_chat_id = 3456
@@ -177,7 +282,9 @@ class DBHelperTest(unittest.TestCase):
 
     def test_add_announcement(self):
         # add announcement
-        ann = Announcement("08:30", "DSP Assignment 10 should be delivered tomorrow", "once")
+        ann = Announcement(
+            "08:30", "DSP Assignment 10 should be delivered tomorrow", "once"
+        )
         ann1 = Announcement("10:10", "Another test announcement", "twice")
         self.assertTrue(self.db.add_announcement(ann))
         self.assertTrue(self.db.add_announcement(ann1))
@@ -200,7 +307,9 @@ class DBHelperTest(unittest.TestCase):
 
     def test_get_announcements(self):
         # add some announcements
-        ann1 = Announcement("21:30", "DSP Assignment 10 should be delivered tomorrow", "")
+        ann1 = Announcement(
+            "21:30", "DSP Assignment 10 should be delivered tomorrow", ""
+        )
         ann2 = Announcement("10:30", "Communication Lecture is cancelled", "once")
         ann3 = Announcement("09:30", "Dr Tamer is not coming again", "twice")
 
@@ -217,11 +326,15 @@ class DBHelperTest(unittest.TestCase):
 
     def test_update_announcement(self):
         # add an announcment
-        self.db.add_announcement(Announcement("21:30", "DSP Assignment 10 should be delivered tomorrow", ""))
-        ann = self.db.get_announcements()[0]  # get announcment before update to use its id
+        self.db.add_announcement(
+            Announcement("21:30", "DSP Assignment 10 should be delivered tomorrow", "")
+        )
+        ann = self.db.get_announcements()[
+            0
+        ]  # get announcment before update to use its id
         self.db.update_announcement(ann.id, "once")  # update
         ann_updated = self.db.get_announcements()[0]  # get announcment after update
-        self.assertEqual(ann_updated.done,  "once")  # test updated value
+        self.assertEqual(ann_updated.done, "once")  # test updated value
 
 
 # class CommandsTest(unittest.TestCase):

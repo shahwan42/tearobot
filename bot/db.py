@@ -16,8 +16,7 @@ DB_SQL_SCRIPT = os.path.join(BASE_DIR, "db", "bot.db.m1.sql")
 log = config_logger(__name__)
 
 
-class DBHelper():
-
+class DBHelper:
     def __init__(self, filename="bot.db"):
         try:
             self.db_file = str(os.path.join(DB_DIR, filename))
@@ -57,7 +56,14 @@ class DBHelper():
         ``params`` tuple(``id``: int, ``update_id``: int, ``user_id``: int, ``chat_id``: int,
         ``date``: int(unix_timestamp), ``text``: str"""
         sql = "INSERT INTO Message VALUES (?, ?, ?, ?, ?, ?)"
-        params = (message.id, message.update_id, message.user_id, message.chat_id, message.date, message.text)
+        params = (
+            message.id,
+            message.update_id,
+            message.user_id,
+            message.chat_id,
+            message.date,
+            message.text,
+        )
         try:
             self.cur.execute(sql, params)
             self.conn.commit()
@@ -88,8 +94,20 @@ class DBHelper():
     def add_user(self, user: User) -> bool:
         """Insert a new user"""
         sql = "INSERT INTO User VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-        params = (user.id, user.is_bot, user.is_admin, user.first_name, user.last_name, user.username,
-                  user.language_code, user.active, user.created, user.updated, user.last_command, user.chat_id)
+        params = (
+            user.id,
+            user.is_bot,
+            user.is_admin,
+            user.first_name,
+            user.last_name,
+            user.username,
+            user.language_code,
+            user.active,
+            user.created,
+            user.updated,
+            user.last_command,
+            user.chat_id,
+        )
         try:
             self.cur.execute(sql, params)
             self.conn.commit()
@@ -128,13 +146,20 @@ class DBHelper():
         except Error as err:
             exit(err)
 
-    def set_user_last_command(self, user_id: int, updated: int, last_command: str) -> bool:
+    def set_user_last_command(
+        self, user_id: int, updated: int, last_command: str
+    ) -> bool:
         """Update user's last command"""
         sql = "UPDATE User SET updated = ?, last_command = ? WHERE id = ?"
         try:
             self.cur.execute(sql, (updated, last_command, user_id))
             self.conn.commit()
-            log.info("last command updated for user ID: " + str(user_id) + " - current command: " + str(last_command))
+            log.info(
+                "last command updated for user ID: "
+                + str(user_id)
+                + " - current command: "
+                + str(last_command)
+            )
             return True
         except Error as err:
             self.conn.rollback()
@@ -177,7 +202,8 @@ class DBHelper():
             result = self.cur.execute(sql)
             for entry in result.fetchall():
                 schedule_entries.append(
-                    ScheduleEntry(entry[1], entry[2], entry[3], entry[0]))
+                    ScheduleEntry(entry[1], entry[2], entry[3], entry[0])
+                )
             return schedule_entries
         except Error as err:
             exit(err)

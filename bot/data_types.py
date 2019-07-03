@@ -6,8 +6,22 @@
 
 class User:
     """User type"""
-    def __init__(self, id: int, is_bot: bool, is_admin: bool, first_name: str, last_name: str, username: str,
-                 language_code: str, active: bool, created: int, updated: int, last_command: str, chat_id: int):
+
+    def __init__(
+        self,
+        id: int,
+        is_bot: bool,
+        is_admin: bool,
+        first_name: str,
+        last_name: str,
+        username: str,
+        language_code: str,
+        active: bool,
+        created: int,
+        updated: int,
+        last_command: str,
+        chat_id: int,
+    ):
         self.id = id
         self.is_bot = bool(is_bot)
         self.is_admin = bool(is_admin)
@@ -22,15 +36,20 @@ class User:
         self.chat_id = chat_id
 
     def __str__(self):
-        return f"[<User>: id: {self.id}, is_bot: {self.is_bot}, is_admin: {self.is_admin}, " \
-               f"first_name: {self.first_name}, last_name: {self.last_name}, username: {self.username}, " \
-               f"language_code: {self.language_code}, active: {self.active}, created: {self.created}, " \
-               f"updated: {self.updated}, last_command: {self.last_command}, chat_id: {self.chat_id}]"
+        return (
+            f"[<User>: id: {self.id}, is_bot: {self.is_bot}, is_admin: {self.is_admin}, "
+            f"first_name: {self.first_name}, last_name: {self.last_name}, username: {self.username}, "
+            f"language_code: {self.language_code}, active: {self.active}, created: {self.created}, "
+            f"updated: {self.updated}, last_command: {self.last_command}, chat_id: {self.chat_id}]"
+        )
 
 
 class Message:
     """Message type"""
-    def __init__(self, id: int, update_id: int, user_id: int, chat_id: int, date: int, text: str):
+
+    def __init__(
+        self, id: int, update_id: int, user_id: int, chat_id: int, date: int, text: str
+    ):
         self.id = id
         self.update_id = update_id
         self.user_id = user_id
@@ -39,12 +58,15 @@ class Message:
         self.text = text
 
     def __str__(self):
-        return f"[<Message>: id: {self.id}, update_id: {self.update_id}, user_id: {self.user_id}, " \
-               f"chat_id: {self.chat_id}, date: {self.date}, text: {self.text}]"
+        return (
+            f"[<Message>: id: {self.id}, update_id: {self.update_id}, user_id: {self.user_id}, "
+            f"chat_id: {self.chat_id}, date: {self.date}, text: {self.text}]"
+        )
 
 
 class Announcement:
     """Event type"""
+
     def __init__(self, time: str, description: str, done: str, id: int = None):
         self.time = time
         self.description = description
@@ -52,12 +74,15 @@ class Announcement:
         self.id = id
 
     def __str__(self):
-        return f"[<Announcement>: id: {self.id}, time: {self.time}, description: {self.description}, " \
-               f"done: {self.done}]"
+        return (
+            f"[<Announcement>: id: {self.id}, time: {self.time}, description: {self.description}, "
+            f"done: {self.done}]"
+        )
 
 
 class ScheduleEntry:
     """Schedule Entry type"""
+
     def __init__(self, time: int, subject: str, day: str, id: int = None):
         self.id = id
         self.time = time
@@ -65,5 +90,7 @@ class ScheduleEntry:
         self.day = day
 
     def __str__(self):
-        return f"[<ScheduleEntry>: id: {self.id}, time: {self.time}, subject: {self.subject}, " \
-               f"day: {self.day}]"
+        return (
+            f"[<ScheduleEntry>: id: {self.id}, time: {self.time}, subject: {self.subject}, "
+            f"day: {self.day}]"
+        )

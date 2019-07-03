@@ -12,35 +12,41 @@ from .db import DBHelper
 
 def help_command():
     """Returns available commands with their help messages"""
-    return "Available commands:\n" \
-        "/help - Show this message\n" \
-        "/weather - Weather in `Zagazig, Egypt` now\n" \
-        "/translate - Translate message from english to arabic\n" \
-        "/calculate - Calculate a mathematical expression\n" \
-        "/tweet - Tweet on our Twitter account\n" \
-        "/ocr_url - Extract text from image\n"\
-        "/stop - Stop using bot\n" \
+    return (
+        "Available commands:\n"
+        "/help - Show this message\n"
+        "/weather - Weather in `Zagazig, Egypt` now\n"
+        "/translate - Translate message from english to arabic\n"
+        "/calculate - Calculate a mathematical expression\n"
+        "/tweet - Tweet on our Twitter account\n"
+        "/ocr_url - Extract text from image\n"
+        "/stop - Stop using bot\n"
         "/start - Start using bot"
+    )
 
 
 def start_command(db: DBHelper, user_id: int, updated: int, active: bool):
     """Returns start command message"""
     db.set_user_status(user_id, updated, active)
-    return "Welcome to TBot.\n" \
-        "Usage:\n" \
-        "/help - Show help message\n" \
-        "/weather - Weather in `Zagazig, Egypt` now\n" \
-        "/translate - Translate message from English to Arabic\n" \
-        "/calculate - Calculate a mathematical expression\n" \
-        "/tweet - Tweet on our Twitter account\n" \
-        "/ocr_url - Extract text from image\n" \
-        "/stop - Stop using bot\n" \
+    return (
+        "Welcome to TBot.\n"
+        "Usage:\n"
+        "/help - Show help message\n"
+        "/weather - Weather in `Zagazig, Egypt` now\n"
+        "/translate - Translate message from English to Arabic\n"
+        "/calculate - Calculate a mathematical expression\n"
+        "/tweet - Tweet on our Twitter account\n"
+        "/ocr_url - Extract text from image\n"
+        "/stop - Stop using bot\n"
         "/start - Start using bot"
+    )
 
 
 def calculate(expr):
     """Calculates ``expr`` and returns the result"""
-    response = requests.get(f"http://api.mathjs.org/v4/?expr={urllib.parse.quote(expr)}")
+    response = requests.get(
+        f"http://api.mathjs.org/v4/?expr={urllib.parse.quote(expr)}"
+    )
     if response.status_code == 200:
         return f"Result: {response.text}"
     return "Error happened. Use a valid expression"
@@ -49,8 +55,13 @@ def calculate(expr):
 def ocr_url(url, overlay=False, language="eng"):
     """OCR from image using its ``url``"""
     api_key = os.environ.get("OCR_API")
-    payload = {"url": url, "isOverlayRequired": overlay, "apikey": api_key, "language": language, }
-    r = requests.post("https://api.ocr.space/parse/image", data=payload,)
+    payload = {
+        "url": url,
+        "isOverlayRequired": overlay,
+        "apikey": api_key,
+        "language": language,
+    }
+    r = requests.post("https://api.ocr.space/parse/image", data=payload)
     results = r.json()
     try:
         return results["ParsedResults"][0]["ParsedText"]
@@ -66,7 +77,8 @@ def translate(message):
         sys.exit(1)
     response = requests.post(
         "https://translate.yandex.net/api/v1.5/tr.json/translate",
-        params={"key": yandex_token, "text": message, "lang": "en-ar"})
+        params={"key": yandex_token, "text": message, "lang": "en-ar"},
+    )
     if response.status_code != 200:
         return "Error Happend, try again later."
     jsdict = response.json()
